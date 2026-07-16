@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class mantenedor extends Model
 {
-    protected $created_at = 'data_criacao';
-    protected $updated_at = 'data_alteracao';
+    protected $table = "mantenedores";
+
+    protected $fillable = ['nome', 'cidade', 'uf', 'bairro', 'logradouro', 'cep'];
 }

@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mantenedors', function (Blueprint $table) {
+        Schema::create('mantenedores', function (Blueprint $table) {
             $table->id();
+            $table->string('nome')->unique();
+            $table->string('cidade')->nullable();
+            $table->string('uf')->nullable();
+            $table->string('bairro')->nullable();
+            $table->string('logradouro')->nullable();
+            $table->string('cep')->nullable();
             $table->timestamps();
         });
     }
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mantenedors');
+        Schema::dropIfExists('mantenedores');
     }
 };
