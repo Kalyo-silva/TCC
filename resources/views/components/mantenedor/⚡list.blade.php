@@ -38,7 +38,11 @@ new class extends Component
         <flux:card class="flex items-center justify-between">
             <div class="flex items-start flex-col gap-2">
                 <flux:heading size="lg">{{ $mant->nome }}</flux:heading>
-                <flux:text>0 Instituições Vinculadas</flux:text>
+                @if ($mant->instituicoes()->count() == 1)
+                    <flux:text>{{ $mant->instituicoes()->count() }} Instituição Vinculada</flux:text>
+                @else
+                    <flux:text>{{ $mant->instituicoes()->count() }} Instituições Vinculadas</flux:text>
+                @endif
             </div>
             <div class="flex gap-2">
                 <flux:modal.trigger name="remove">

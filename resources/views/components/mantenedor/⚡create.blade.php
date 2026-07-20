@@ -47,20 +47,26 @@ new class extends Component
 };
 ?>
 
-<form wire:submit='save' class="flex flex-col gap-2 mt-4">
-    <flux:input placeholder="Nome..." wire:model='nome'/>
-    <div class="flex gap-2">
-        <div class="w-8/10">
-            <flux:input placeholder="Cidade..." wire:model="cidade"/>
-        </div>
-        <div class="w-2/10">
-            <flux:input placeholder="UF..." wire:model="uf" maxlength="2"/>
-        </div>
+<flux:modal name="create">
+    <div class="flex items-center gap-4">
+        <flux:icon.plus/>
+        <flux:heading size="">Novo Mantenedor</flux:heading>
     </div>
-    <div class="flex gap-2">
-        <flux:input placeholder="Bairro..." wire:model="bairro"/>
-        <flux:input placeholder="CEP..." mask="99999-999" wire:model="cep"/>
-    </div>
-    <flux:input placeholder="Logradouro..." wire:model="logradouro"/>
-    <flux:button type="submit" class="mt-4" variant="primary">Salvar</flux:button>
-</form>
+        <form wire:submit='save' class="flex flex-col gap-4 mt-4">
+            <flux:input placeholder="Nome..." wire:model='nome'/>
+            <div class="flex gap-4">
+                <div class="w-8/10">
+                    <flux:input placeholder="Cidade..." wire:model="cidade"/>
+                </div>
+                <div class="w-2/10">
+                    <flux:input placeholder="UF..." wire:model="uf" maxlength="2"/>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <flux:input placeholder="Bairro..." wire:model="bairro"/>
+                <flux:input placeholder="CEP..." mask="99999-999" wire:model="cep"/>
+            </div>
+            <flux:input placeholder="Logradouro..." wire:model="logradouro"/>
+            <flux:button type="submit" class="mt-4" variant="primary">Salvar</flux:button>
+        </form>
+</flux:modal>

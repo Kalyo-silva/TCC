@@ -12,5 +12,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('mantenedor', 'mantenedor')->name('mantenedor');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('instituicao', 'instituicao')->name('instituicao');
+});
 
 require __DIR__.'/settings.php';

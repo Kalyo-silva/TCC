@@ -86,7 +86,7 @@ new class extends Component
         </div>
         <flux:input placeholder="Logradouro..." wire:model="logradouro"/>
         
-        <div class="flex items-center gap-2 justify-end mt-4">
+        <div class="flex items-center gap-4 justify-end mt-4">
             <flux:modal.close>
                 <flux:button icon='arrow-uturn-left' type="button">Cancelar</flux:button>
             </flux:modal.close>

@@ -14,25 +14,8 @@
     </div>
     
     <livewire:mantenedor.list />
-
-    <flux:modal name="create">
-        <div class="flex items-center gap-2">
-            <flux:icon.plus/>
-            <flux:heading size="">Novo Mantenedor</flux:heading>
-        </div>
-
-        <livewire:mantenedor.create />
-    </flux:modal>
-
-    
-    <flux:modal name="details">
-        <div class="flex items-center gap-2">
-            <flux:icon.information-circle/>
-            <flux:heading size="">Detalhe do Mantenedor</flux:heading>
-        </div>
-        <livewire:mantenedor.details />
-    </flux:modal>
-    
+    <livewire:mantenedor.create />
+    <livewire:mantenedor.details />
     <livewire:mantenedor.edit />
     <livewire:mantenedor.remove />
 </x-layouts::app>
