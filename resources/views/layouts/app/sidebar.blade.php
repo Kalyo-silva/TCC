@@ -21,6 +21,9 @@
                     <flux:sidebar.item icon="academic-cap" :href="route('instituicao')" :current="request()->routeIs('instituicao')" wire:navigate>
                         {{ __('Instituições') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="user-group" :href="route('professor')" :current="request()->routeIs('professor')" wire:navigate>
+                        {{ __('Professores') }}
+                    </flux:sidebar.item>
 
                     
                 </flux:sidebar.group>
