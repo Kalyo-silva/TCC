@@ -24,6 +24,10 @@
                     <flux:sidebar.item icon="user-group" :href="route('professor')" :current="request()->routeIs('professor')" wire:navigate>
                         {{ __('Professores') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="book-open" :href="route('curso')" :current="request()->routeIs('curso')" wire:navigate>
+                        {{ __('Cursos') }}
+                    </flux:sidebar.item>
+
 
                     
                 </flux:sidebar.group>

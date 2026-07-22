@@ -20,4 +20,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('professor', 'professor')->name('professor');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('curso', 'curso')->name('curso');
+});
+
+
 require __DIR__.'/settings.php';
