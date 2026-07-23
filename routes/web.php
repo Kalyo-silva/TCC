@@ -24,5 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('curso', 'curso')->name('curso');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('instrumento', 'instrumento')->name('instrumento');
+});
+
 
 require __DIR__.'/settings.php';

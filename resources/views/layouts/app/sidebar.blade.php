@@ -27,6 +27,9 @@
                     <flux:sidebar.item icon="book-open" :href="route('curso')" :current="request()->routeIs('curso')" wire:navigate>
                         {{ __('Cursos') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="clipboard-document-list" :href="route('instrumento')" :current="request()->routeIs('instrumento')" wire:navigate>
+                        {{ __('Instrumentos') }}
+                    </flux:sidebar.item>
 
 
                     
