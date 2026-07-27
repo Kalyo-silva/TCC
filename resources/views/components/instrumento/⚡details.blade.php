@@ -10,6 +10,8 @@ new class extends Component
     public $titulo;
     public $ano;
 
+    protected $listeners = ['postInsert' => '$refresh'];
+
     #[On('Detail')]
     public function getIdInstrumento($id){
         $this->id = $id;
@@ -20,8 +22,11 @@ new class extends Component
             $this->titulo = $instrumento->titulo;
             $this->ano = $instrumento->ano;
         }
-    }
+    }   
 
+    public function select(int $id){
+        $this->dispatch('DetailDimensao', id : $id);
+    }
 };
 ?>
 
@@ -40,9 +45,22 @@ new class extends Component
                 <flux:input label="Ano" placeholder="Ano..." wire:model='ano'/>
             </div>
         </div>
-        <flux:separator text="Dimensões"/>
+
         <div>
 
+            <flux:separator text="Dimensões"/>
+            <div class="flex gap-4 justify-between items-end my-4">
+                <flux:text>Lista de Dimensões</flux:text>
+                <flux:modal.trigger name="createDimensao">
+                    <flux:button icon="plus" size="sm" variant="ghost" wire:click='select({{ $this->id }})'></flux:button>
+                </flux:modal.trigger>
+            </div>
+            
+            <livewire:dimensao.list :instrumento_id="$this->id" />        
+                
         </div>
+
+
+        <livewire:dimensao.create />
     </div>
 </flux:modal>
