@@ -2,27 +2,27 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\dimensao;
+use App\models\indicador;
 use Flux\Flux;
 
 new class extends Component
 {
     public $id;
 
-    #[On('DetailDimensao')]
-    public function getIdDimensao($id){
+    #[On('DetailIndicador')]
+    public function getIdIndicador($id){
         $this->id = $id;
     }
 
     public function destroy(){
-        $dimensao = dimensao::findOrFail($this->id);
+        $indicador = indicador::findOrFail($this->id);
 
-        if ($dimensao){
+        if ($indicador){
             try{
-                if ($dimensao->delete()){
+                if ($indicador->delete()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro removido com sucesso!');
-                    Flux::modal('remove_dimensao')->close();
+                    Flux::modal('remove_indicador')->close();
                 }
             }
             catch (Throwable $e){
@@ -33,11 +33,11 @@ new class extends Component
 };
 ?>
 
-<flux:modal name="remove_dimensao">
+<flux:modal name="remove_indicador">
     <div class="flex items-center gap-2">
-        <flux:heading size="lg">Remover Dimensão</flux:heading>
+        <flux:heading size="lg">Remover Indicador</flux:heading>
     </div>
-    <flux:text class="mt-2">Tem certeza que deseja remover esta dimensão?</flux:text>
+    <flux:text class="mt-2">Tem certeza que deseja remover este Indicador?</flux:text>
     <div class="flex justify-end items-center gap-2 mt-4">
         <flux:modal.close>
             <flux:button icon='arrow-uturn-left' type="button">Cancelar</flux:button>

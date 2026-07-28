@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\dimensao;
+use App\models\indicador;
 use Flux\Flux;
 
 new class extends Component
@@ -10,28 +10,25 @@ new class extends Component
     public $id;
     public $descricao;
     public $sequencia;
-    public $tituloInstrumento;
+    public $descricaoDimensao;
 
-    protected $instrumento;
-
-
-    #[On('DetailDimensao')]
-    public function getIdDimensao($id){
+    #[On('DetailIndicador')]
+    public function getIdIndicador($id){
         $this->id = $id;
 
-        $dimensao = dimensao::with('instrumento')->find($this->id);
+        $indicador = indicador::with('dimensao')->find($this->id);
 
-        if ($dimensao){
-            $this->descricao = $dimensao->descricao;
-            $this->sequencia = $dimensao->sequencia;
-            $this->tituloInstrumento = $dimensao->instrumento->titulo;
+        if ($indicador){
+            $this->descricao = $indicador->descricao;
+            $this->sequencia = $indicador->sequencia;
+            $this->descricaoDimensao = $indicador->dimensao->descricao;
         }
     }
 
     public function save(){
-        $dimensao = dimensao::find($this->id);
+        $indicador = indicador::find($this->id);
 
-        $dimensao->descricao = $this->descricao;
+        $indicador->descricao = $this->descricao;
 
         $validated = $this->validate([
             "descricao" => "required"
@@ -39,10 +36,10 @@ new class extends Component
 
         if ($validated){
             try{
-                if ($dimensao->save()){
+                if ($indicador->save()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro alterado com sucesso!');
-                    Flux::modal('edit_dimensao')->close();
+                    Flux::modal('edit_indicador')->close();
                 }
             }
             catch (Throwable $e){  
@@ -53,15 +50,15 @@ new class extends Component
 };
 ?>
 
-<flux:modal name="edit_dimensao" class="max-w-2xl w-full">
+<flux:modal name="edit_indicador" class="max-w-2xl w-full">
     <div class="flex items-center gap-4">
-        <flux:icon.cube/>
-        <flux:heading size="">Editar Dimensão</flux:heading>
+        <flux:icon.chart-bar/>
+        <flux:heading size="">Editar Indicador</flux:heading>
     </div>
     <form wire:submit='save' class="flex flex-col gap-4 mt-8">
         <div class="flex gap-4">
             <div class="w-8/10">
-                <flux:input placeholder="Instrumento..."  wire:model='tituloInstrumento' readonly/>
+                <flux:input placeholder="Dimensão..."  wire:model='descricaoDimensao' readonly/>
             </div>
             <div class="w-2/10">
                 <flux:input placeholder="Sequencia..." wire:model='sequencia' readonly/>  
