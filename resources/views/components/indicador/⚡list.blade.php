@@ -77,7 +77,7 @@ new class extends Component
                 <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
                 
                 <flux:menu>
-                    <flux:modal.trigger name="add_indicador">
+                    <flux:modal.trigger name="add_criterio">
                         <flux:menu.item icon="plus-circle" wire:click='selectIndicador({{ $ind->id }})'>Adicionar Critério</flux:menu.item>
                     </flux:modal.trigger>
 
@@ -90,14 +90,17 @@ new class extends Component
                     </flux:modal.trigger>
 
                     <flux:modal.trigger name="remove_indicador">
-                        <flux:menu.item variant="danger" icon="trash" wire:click='selectIndicador({{ $ind->id }})'>Delete</flux:menu.item>
+                        <flux:menu.item variant="danger" icon="trash" wire:click='selectIndicador({{ $ind->id }})'>Remover</flux:menu.item>
                     </flux:modal.trigger>
                 </flux:menu>
 
             </flux:dropdown>
         </div>
+
+        <livewire:criterio.list :indicador_id="$ind->id"/>
     @endforeach
 
     <livewire:indicador.remove />
     <livewire:indicador.edit />
+    <livewire:criterio.create />
 </div>

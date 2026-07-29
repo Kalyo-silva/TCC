@@ -86,7 +86,7 @@ new class extends Component
                         </flux:modal.trigger>
 
                         <flux:modal.trigger name="remove_dimensao">
-                            <flux:menu.item variant="danger" icon="trash" wire:click='selectdimensao({{ $dim->id }})'>Delete</flux:menu.item>
+                            <flux:menu.item variant="danger" icon="trash" wire:click='selectdimensao({{ $dim->id }})'>Remover</flux:menu.item>
                         </flux:modal.trigger>
                     </flux:menu>
 
