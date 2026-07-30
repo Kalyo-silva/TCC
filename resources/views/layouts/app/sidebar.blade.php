@@ -30,6 +30,9 @@
                     <flux:sidebar.item icon="clipboard-document-list" :href="route('instrumento')" :current="request()->routeIs('instrumento')" wire:navigate>
                         {{ __('Instrumentos') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="trophy" :href="route('avaliacao')" :current="request()->routeIs('avaliacao')" wire:navigate>
+                        {{ __('Avaliações') }}
+                    </flux:sidebar.item>
 
 
                     

@@ -28,5 +28,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('instrumento', 'instrumento')->name('instrumento');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('avaliacao', 'avaliacao')->name('avaliacao');
+});
+
+
 
 require __DIR__.'/settings.php';
