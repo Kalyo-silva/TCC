@@ -75,6 +75,9 @@ new class extends Component
 
             <div class="flex flex-row-reverse gap-4">
                 <flux:modal.trigger name="edit"> 
+                    <flux:button type="submit" class="mt-4" icon="play" wire:click="select({{ $this->id }})">Executar</flux:button> 
+                </flux:modal.trigger>
+                <flux:modal.trigger name="edit"> 
                     <flux:button type="submit" class="mt-4" icon="pencil-square" wire:click="select({{ $this->id }})">Editar</flux:button> 
                 </flux:modal.trigger>
                 <flux:modal.trigger name="remove"> 
