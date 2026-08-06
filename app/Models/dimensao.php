@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\hasMany;
 class dimensao extends Model
 {
     protected $table = 'dimensoes';
@@ -12,5 +13,8 @@ class dimensao extends Model
 
     public function instrumento() : belongsTo{
         return $this->belongsTo(instrumento::class);
+    }
+    public function indicadores(): hasMany{
+        return $this->hasMany(indicador::class);
     }
 }

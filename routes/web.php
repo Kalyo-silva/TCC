@@ -32,6 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('avaliacao', 'avaliacao')->name('avaliacao');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::livewire('/avaliacao/execute/{id}', 'pages::avaliacao.execute')->name('avaliacao.execute');
+});
+
 
 
 require __DIR__.'/settings.php';

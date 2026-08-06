@@ -21,7 +21,7 @@ new class extends Component
     public $nomeCurso;
 
     #[On('AvaliacaoDetail')]
-    public function getIdInstrumento($id){
+    public function getIdAvaliacao($id){
         $this->id = $id;
 
         $avaliacao = avaliacao::find($this->id);
@@ -74,9 +74,11 @@ new class extends Component
             <flux:input label="Usuário responsável" wire:model='usuarioNome' readonly/>
 
             <div class="flex flex-row-reverse gap-4">
-                <flux:modal.trigger name="edit"> 
-                    <flux:button type="submit" class="mt-4" icon="play" wire:click="select({{ $this->id }})">Executar</flux:button> 
-                </flux:modal.trigger>
+                @if ($this->id)
+                    <a href="{{ route('avaliacao.execute', ['id' => $this->id]) }}"> 
+                        <flux:button type="submit" class="mt-4" icon="play" wire:click="select({{ $this->id }})">Executar</flux:button> 
+                    </a>
+                @endif
                 <flux:modal.trigger name="edit"> 
                     <flux:button type="submit" class="mt-4" icon="pencil-square" wire:click="select({{ $this->id }})">Editar</flux:button> 
                 </flux:modal.trigger>
