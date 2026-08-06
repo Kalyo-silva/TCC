@@ -58,20 +58,27 @@ new class extends Component
             <flux:input placeholder="Nome..." wire:model='nome'/>
             <div class="flex gap-4">
                 <div class="w-5/10">
-                    <flux:select icon="people-group" wire:model='professor_id'>
+
+                <flux:input.group label="Professor">
+                    <flux:button icon='user-circle'/>
+                    <flux:select wire:model='professor_id'>
                         <flux:select.option value="dummy">Professor...</flux:select.option>
                         @foreach ($this->professores() as $prof)
                             <flux:select.option value="{{ $prof->id }}">{{ $prof->nome }}</flux:select.option>
                         @endforeach
                     </flux:select>
+                </flux:input.group>
                 </div>
                 <div class="w-5/10">
-                    <flux:select wire:model='instituicao_id'>
-                        <flux:select.option value="dummy">Instituição...</flux:select.option>
-                        @foreach ($this->instituicoes() as $inst)
-                            <flux:select.option value="{{ $inst->id }}">{{ $inst->nome }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
+                    <flux:input.group label="Instituição">
+                        <flux:button icon='academic-cap'/>
+                        <flux:select wire:model='instituicao_id'>
+                            <flux:select.option value="dummy">Instituição...</flux:select.option>
+                            @foreach ($this->instituicoes() as $inst)
+                                <flux:select.option value="{{ $inst->id }}">{{ $inst->nome }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    </flux:input.group>
                 </div>
             </div>
             <flux:button type="submit" class="mt-4" variant="primary">Salvar</flux:button>

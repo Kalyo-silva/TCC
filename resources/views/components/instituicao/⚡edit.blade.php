@@ -132,16 +132,19 @@ new class extends Component
                     </div>
                 </div>
             </div>
-            <flux:select wire:model.live='mantenedor_id'>
-                <flux:select.option value="dummy" selected>Mantenedor...</flux:select.option>
-                @foreach ($this->getMantenedores() as $mant)
-                    @if ($mant->id == $this->mantenedor_id)
-                        <flux:select.option selected value="{{ $mant->id }}">{{$mant->nome}}</flux:select.option>
-                    @else
-                        <flux:select.option value="{{ $mant->id }}">{{$mant->nome}}</flux:select.option>
-                    @endif
-                @endforeach
-            </flux:select>
+            <flux:input.group>
+                <flux:button icon='building-library'/>
+                <flux:select wire:model.live='mantenedor_id'>
+                    <flux:select.option value="dummy" selected>Mantenedor...</flux:select.option>
+                    @foreach ($this->getMantenedores() as $mant)
+                        @if ($mant->id == $this->mantenedor_id)
+                            <flux:select.option selected value="{{ $mant->id }}">{{$mant->nome}}</flux:select.option>
+                        @else
+                            <flux:select.option value="{{ $mant->id }}">{{$mant->nome}}</flux:select.option>
+                        @endif
+                    @endforeach
+                </flux:select>
+            </flux:input.group>
             <div class="flex gap-4">
                 <div class="w-7/10">
                     <flux:input placeholder="Bairro..." wire:model="bairro"/>

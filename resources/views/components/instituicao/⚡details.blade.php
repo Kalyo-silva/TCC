@@ -79,7 +79,10 @@ new class extends Component
                 </div>
             </div>
         </div>
-        <flux:input icon="building-library" readonly placeholder="Mantenedor..." label="Mantenedor" wire:model="mantenedor"/>
+        <flux:input.group label="Mantenedor" >
+            <flux:button icon="building-library" />
+            <flux:input readonly placeholder="Mantenedor..." wire:model="mantenedor"/>
+        </flux:input.group>
         <div class="flex gap-4">
             <div class="w-8/10">
                 <flux:input placeholder="Bairro..." readonly label="Bairro" wire:model="bairro"/>

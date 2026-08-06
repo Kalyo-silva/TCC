@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\belongsTo;
-use App\models\professor;
-use App\models\instituicao;
+use App\Models\professor;
+use App\Models\instituicao;
 
 class curso extends Model
 {
