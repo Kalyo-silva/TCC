@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\curso;
+use App\Models\curso;
 use Flux\Flux;
 
 new class extends Component

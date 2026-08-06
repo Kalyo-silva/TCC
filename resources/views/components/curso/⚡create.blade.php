@@ -2,9 +2,9 @@
 
 use Livewire\Component;
 use Flux\Flux;
-use App\models\professor;
-use App\models\instituicao;
-use App\models\curso;
+use App\Models\professor;
+use App\Models\instituicao;
+use App\Models\curso;
 
 new class extends Component
 {

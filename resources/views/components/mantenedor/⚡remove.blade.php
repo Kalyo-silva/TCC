@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\mantenedor;
+use App\Models\mantenedor;
 use Flux\Flux;
 
 new class extends Component

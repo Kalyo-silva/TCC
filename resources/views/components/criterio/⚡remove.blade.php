@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\criterio;
+use App\Models\criterio;
 use Flux\Flux;
 
 new class extends Component

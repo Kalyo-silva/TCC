@@ -2,10 +2,9 @@
 
 use Livewire\Component;
 use Flux\Flux;
-use App\models\instituicao;
-use App\models\mantenedor;
+use App\Models\instituicao;
+use App\Models\mantenedor;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 
 new class extends Component
 {

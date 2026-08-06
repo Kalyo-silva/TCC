@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\dimensao;
+use App\Models\dimensao;
 use Flux\Flux;
 
 new class extends Component

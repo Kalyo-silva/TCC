@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Flux\Flux;
-use App\models\instrumento;
+use App\Models\instrumento;
 
 new class extends Component
 {

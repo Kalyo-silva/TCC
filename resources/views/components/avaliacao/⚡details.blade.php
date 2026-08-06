@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\avaliacao;
+use App\Models\avaliacao;
 
 new class extends Component
 {

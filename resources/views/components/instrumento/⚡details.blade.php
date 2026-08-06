@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Component;
-use App\models\instrumento;
+use App\Models\instrumento;
 use Livewire\Attributes\On;
 
 new class extends Component
@@ -36,7 +36,7 @@ new class extends Component
         <flux:heading size="lg">Detalhes do Instrumento de Avaliação</flux:heading>
     </div>
     
-    <div class="flex flex-col gap-8 mt-8">
+    <div class="flex flex-col mt-8">
         <div class="flex gap-4">
             <div class="w-8/10">
                 <flux:input label="Título" placeholder="Titulo..." wire:model='titulo'/>
@@ -46,20 +46,14 @@ new class extends Component
             </div>
         </div>
 
-        <div>
-
-            <flux:separator text="Dimensões"/>
-            <div class="flex gap-4 justify-between items-end my-4">
-                <flux:text>Lista de Dimensões</flux:text>
-                <flux:modal.trigger name="createDimensao">
-                    <flux:button icon="plus" size="sm" variant="ghost" wire:click='select({{ $this->id }})'></flux:button>
-                </flux:modal.trigger>
-            </div>
-            
-            <livewire:dimensao.list :instrumento_id="$this->id" />        
-                
+        <div class="flex gap-4 justify-between items-end my-4">
+            <flux:text>Lista de Dimensões</flux:text>
+            <flux:modal.trigger name="createDimensao">
+                <flux:button icon="plus" size="sm" variant="ghost" wire:click='select({{ $this->id }})'></flux:button>
+            </flux:modal.trigger>
         </div>
-
+        
+        <livewire:dimensao.list :instrumento_id="$this->id" />     
 
         <livewire:dimensao.create />
     </div>

@@ -77,9 +77,13 @@ new class extends Component
                 <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
                 
                 <flux:menu>
-                    <flux:modal.trigger name="add_criterio">
-                        <flux:menu.item icon="plus-circle" wire:click='selectIndicador({{ $ind->id }})'>Adicionar Critério</flux:menu.item>
-                    </flux:modal.trigger>
+                    @if($ind->criterios->count() != 5)
+                        <flux:modal.trigger name="add_criterio">
+                            <flux:menu.item icon="plus-circle" wire:click='selectIndicador({{ $ind->id }})'>Adicionar Critério</flux:menu.item>
+                        </flux:modal.trigger>
+                    @else
+                        <flux:menu.item icon="plus-circle" disabled wire:click='selectIndicador({{ $ind->id }})'>Adicionar Critério</flux:menu.item>
+                    @endif
 
                     <flux:menu.item icon="arrow-up" wire:click='up({{ $ind->id }})'>Para Cima</flux:menu.item>
 

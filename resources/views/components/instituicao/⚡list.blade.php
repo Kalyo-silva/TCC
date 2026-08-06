@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Component;
-use App\models\instituicao;
+use App\Models\instituicao;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
 

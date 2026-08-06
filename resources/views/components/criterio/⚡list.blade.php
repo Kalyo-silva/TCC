@@ -64,11 +64,10 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-2">
-
     @foreach ($this->criterios() as $cri)
         <flux:separator />
 
-        <div class="flex items-start justify-between gap-2">
+        <div class="flex items-start justify-between">
             <div class="flex items-start gap-2 ml-12">
                 <flux:icon.list-bullet class="size-5"/>
                 <flux:text>{{ $cri->sequencia.'. '.$cri->descricao  }}</flux:text>

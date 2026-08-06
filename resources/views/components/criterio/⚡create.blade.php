@@ -1,8 +1,8 @@
 <?php
 
 use Livewire\Component;
-use App\models\criterio;
-use App\models\indicador;
+use App\Models\criterio;
+use App\Models\indicador;
 use Livewire\Attributes\On;
 use Flux\Flux;
 
@@ -45,7 +45,8 @@ new class extends Component
                 if ($criterio->save()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro criado com sucesso!');
-                    Flux::modal('add_indicador')->close();
+                    $criterio->descricao = '';
+                    Flux::modal('add_criterio')->close();
                 }
             }
             catch (Throwable $e){  

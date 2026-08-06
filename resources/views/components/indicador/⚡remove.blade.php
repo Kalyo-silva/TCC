@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\indicador;
+use App\Models\indicador;
 use Flux\Flux;
 
 new class extends Component

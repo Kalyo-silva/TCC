@@ -1,8 +1,8 @@
 <?php
 
 use Livewire\Component;
-use App\models\instrumento;
-use App\models\dimensao;
+use App\Models\instrumento;
+use App\Models\dimensao;
 use Livewire\Attributes\On;
 use Flux\Flux;
 

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\curso;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;

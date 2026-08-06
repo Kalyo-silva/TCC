@@ -2,7 +2,7 @@
 
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\models\mantenedor;
+use App\Models\mantenedor;
 use Flux\Flux;
 
 new class extends Component
@@ -45,7 +45,7 @@ new class extends Component
         <flux:heading size="lg">Detalhe do Mantenedor</flux:heading>
     </div>
     
-    <div class="flex gap-4">
+    <div class="flex gap-8">
         <div class="flex flex-col gap-4 mt-8">
             <flux:input readonly label="Nome" placeholder="Nome..." wire:model='nome'/>
             <div class="flex gap-4">
@@ -62,26 +62,27 @@ new class extends Component
             </div>
             <flux:input readonly label="Logradouro" placeholder="Logradouro..." wire:model="logradouro"/>
         </div>
-        <flux:card>  
-            <flux:heading class="text-nowrap mb-2" size="lg">Instituições Vinculadas</flux:heading>
-            @if($this->instituicoes)
-                <div class="flex flex-col gap-2 overflow-y-scroll max-h-64">
-                    
-                    @foreach ($this->instituicoes as $inst)
-                        <div class="flex gap-2 items-center pr-8 cursor-pointer rounded-lg hover:bg-zinc-600">
-                            <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="logo" class="size-10 rounded-lg">
-                            <div>   
-                                <flux:heading>{{$inst->nome}}</flux:heading>
-                                <flux:text>{{$inst->sigla}}</flux:text>
+        <div class="flex flex-col mt-8">
+            <flux:heading class="text-nowrap mb-2 text-sm">Instituições Vinculadas</flux:heading>
+            <flux:card class="h-full">  
+                @if($this->instituicoes)
+                    <div class="flex flex-col gap-2 overflow-y-scroll max-h-64">
+                        @foreach ($this->instituicoes as $inst)
+                            <div class="flex gap-2 items-center pr-8 cursor-pointer rounded-lg hover:bg-zinc-600">
+                                <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="logo" class="size-10 rounded-lg">
+                                <div>   
+                                    <flux:heading>{{$inst->nome}}</flux:heading>
+                                    <flux:text>{{$inst->sigla}}</flux:text>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </flux:card>
+                        @endforeach
+                    </div>
+                @endif
+            </flux:card>
+        </div>
     </div>
     
-    <div class="flex items-center gap-4 justify-end mt-4">
+    <div class="flex items-center gap-4 justify-end mt-8">
         <flux:modal.trigger name="remove">
             <flux:button icon="trash" wire:click='select({{ $id }})'>Excluir</flux:button>
         </flux:modal.trigger>
