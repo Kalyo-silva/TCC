@@ -32,7 +32,10 @@ new class extends Component
             $this->logradouro = $instituicao->logradouro;
             $this->mantenedor = $instituicao->mantenedor->nome;
             $this->sigla = $instituicao->sigla;
-            $this->logo = asset('storage/img_instituicoes/'.$instituicao->logo);
+
+            if ($instituicao->logo) {
+                $this->logo = asset('storage/img_instituicoes/'.$instituicao->logo);
+            }
         }
     }
     
@@ -52,13 +55,13 @@ new class extends Component
     <div class="flex flex-col gap-4 mt-4">
         <div class="flex items-center gap-4">
             <label for="logo" class="h-30 w-30 mt-6">
-                <div class="cursor-pointer h-full rounded-lg border border-zinc-600 w-full bg-zinc-700 items-center justify-center flex overflow-hidden">
-                    @if ($this->logo)
-                        <img class="w-full h-full object-cover" src="{{ $this->logo }}">
+                <flux:card class="cursor-pointer h-full rounded-lg border w-full items-center justify-center flex overflow-hidden p-0">
+                    @if (!$this->logo)
+                        <flux:icon.camera class="size-16"/>
                     @else
-                        <flux:icon.camera class="size-12"/>
+                        <img class="w-full h-full object-cover" src="{{ $this->logo }}">
                     @endif
-                </div>
+                </flux:card>
             </label>
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4">

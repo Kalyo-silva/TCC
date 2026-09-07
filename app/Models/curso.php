@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\belongsTo;
-use App\Models\professor;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\curso_professores;
 use App\Models\instituicao;
 
 class curso extends Model
 {
     protected $table = 'cursos';
 
-    protected $fillable = ['nome', 'instituicao_id', 'professsor_id'];
+    protected $fillable = ['nome', 'instituicao_id'];
 
-    public function professor() : belongsTo{
-        return $this->belongsTo(professor::class);
+    public function professores(): HasMany{
+        return $this->HasMany(curso_professores::class, 'curso_id', 'id');
     }
+
     public function instituicao() : BelongsTo{
         return $this->BelongsTo(instituicao::class);
     }

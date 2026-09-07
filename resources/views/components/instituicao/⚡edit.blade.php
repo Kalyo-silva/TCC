@@ -103,15 +103,15 @@ new class extends Component
     </div>
         <form wire:submit='save' class="flex flex-col gap-4 mt-4">
             <div class="flex items-center gap-4">
-                <div class="w-27 h-24 rounded-lg border-zinc-600 overflow-hidden" x-on:click="$refs.logo.click()">
-                    @if (!$this->logo)
+                <flux:card class="w-27 h-24 p-0 rounded-lg flex items-center justify-center overflow-hidden" x-on:click="$refs.logo.click()">
+                    @if (!$this->old_logo && !$this->logo)
+                        <flux:icon.camera class="size-12"/>
+                    @elseif (!$this->logo)
                         <img class="w-full h-full object-cover" src="{{ asset('storage/img_instituicoes/'.$this->old_logo) }}">
                     @elseif ($this->logo && method_exists($this->logo, 'temporaryUrl'))
                         <img class="w-full h-full object-cover" src="{{ $this->logo->temporaryUrl() }}">
-                    @else
-                        <flux:icon.camera class="size-12"/>
                     @endif
-                </div>
+                </flux:card>
                 <input type="file" x-ref="logo" name="logo" id="logo" class="sr-only" wire:model="logo" accept=".jpg, .jpeg, .png">
                 <div class="flex flex-col gap-4">
                     <div class="flex gap-4">

@@ -68,13 +68,13 @@ new class extends Component
                 @if($this->instituicoes)
                     <div class="flex flex-col gap-2 overflow-y-scroll max-h-64">
                         @foreach ($this->instituicoes as $inst)
-                            <div class="flex gap-2 items-center pr-8 cursor-pointer rounded-lg hover:bg-zinc-600">
+                            <flux:button class="flex gap-2 items-center pr-8 cursor-pointer rounded-lg p-0 border-0">
                                 <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="logo" class="size-10 rounded-lg">
-                                <div>   
+                                <div class="flex flex-col items-baseline">   
                                     <flux:heading>{{$inst->nome}}</flux:heading>
                                     <flux:text>{{$inst->sigla}}</flux:text>
                                 </div>
-                            </div>
+                            </flux:button>
                         @endforeach
                     </div>
                 @endif

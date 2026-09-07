@@ -23,12 +23,10 @@ new class extends Component
 
     public function cursos(){
         return DB::table('cursos')->join('instituicoes', 'cursos.instituicao_id', '=', 'instituicoes.id')
-                             ->join('professores', 'cursos.professor_id', '=', 'professores.id')
                              ->select(
                                 'cursos.id as id',
                                 'cursos.nome as nome',
-                                'instituicoes.nome as inst_nome',
-                                'professores.nome as prof_nome'
+                                'instituicoes.nome as inst_nome'
                              )
                              ->where('cursos.nome', 'ilike', '%'.$this->search.'%')->orderby($this->sortBy, $this->sortDirection)->paginate(10);
     }
@@ -52,7 +50,6 @@ new class extends Component
     <flux:table.columns>
         <flux:table.column sortable :sorted="$sortBy === 'cursos.nome'" :direction="$sortDirection" wire:click="sort('cursos.nome')">Curso</flux:table.column>
         <flux:table.column sortable :sorted="$sortBy === 'instituicoes.nome'" :direction="$sortDirection" wire:click="sort('instituicoes.nome')">Instituição</flux:table.column>
-        <flux:table.column sortable :sorted="$sortBy === 'professores.nome'" :direction="$sortDirection" wire:click="sort('professores.nome')">Professor</flux:table.column>
     </flux:table.columns>
 
     <flux:table.rows>
@@ -62,7 +59,6 @@ new class extends Component
 
                 <flux:table.cell class="whitespace-nowrap">{{ $curso->inst_nome}}</flux:table.cell>
 
-                <flux:table.cell class="whitespace-nowrap">{{ $curso->prof_nome}}</flux:table.cell>
 
                 <flux:table.cell class="py-0">
 
@@ -70,6 +66,9 @@ new class extends Component
                         <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
                         
                         <flux:menu>
+                            <flux:modal.trigger name="prof_add">
+                                <flux:menu.item icon="user-plus" wire:click='select({{ $curso->id }})'>Vincular Professores</flux:menu.item>
+                            </flux:modal.trigger>
                             <flux:modal.trigger name="edit">
                                 <flux:menu.item icon="pencil-square" wire:click='select({{ $curso->id }})'>Editar</flux:menu.item>
                             </flux:modal.trigger>

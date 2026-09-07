@@ -35,7 +35,13 @@ new class extends Component
             <flux:modal.trigger name="details">
                 <flux:card wire:click='' class="cursor-pointer" wire:click='select({{ $inst->id }})'>
                     <div class="flex items-start gap-4">
-                        <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="pfp" class="size-21 rounded-lg">
+                        <flux:card class="size-21 rounded-lg overflow-hidden p-0 flex items-center justify-center">
+                            @if ($inst->logo)
+                                <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="pfp" class="size-21">
+                            @else
+                                <flux:icon.camera class="size-12"/>
+                            @endif
+                        </flux:card>
                         <div class="flex flex-col">
                             <flux:heading size="lg">{{ $inst->nome }}</flux:heading>
                             <flux:text>{{ $inst->sigla }}</flux:text>
