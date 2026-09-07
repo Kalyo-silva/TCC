@@ -80,13 +80,13 @@ new class extends Component
         <form wire:submit='save' class="flex flex-col gap-4 mt-4">
             <div class="flex items-center gap-4">
                 <label for="logo" class="h-24 w-24">
-                    <div class="cursor-pointer h-full rounded-lg border border-zinc-600 w-full bg-zinc-700 items-center justify-center flex overflow-hidden">
+                    <flux:card class="cursor-pointer h-full rounded-lg border items-center justify-center flex overflow-hidden p-0">
                         @if ($this->logo && method_exists($this->logo, 'temporaryUrl'))
                             <img class="w-full h-full object-cover" src="{{ $this->logo->temporaryUrl() }}">
                         @else
                             <flux:icon.camera class="size-12"/>
                         @endif
-                    </div>
+                    </flux:card>
                 </label>
                 <input type="file" name="logo" id="logo" wire:model="logo" hidden accept=".jpg, .jpeg, .png">
                 <div class="flex flex-col gap-4">

@@ -33,7 +33,7 @@ new class extends Component
         }
     }
     
-    public function select(int $id){
+    public function selectMantenedor(int $id){
         $this->dispatch('MantenedorDetail', id : $id);
     }
 };
@@ -84,11 +84,11 @@ new class extends Component
     
     <div class="flex items-center gap-4 justify-end mt-8">
         <flux:modal.trigger name="remove">
-            <flux:button icon="trash" wire:click='select({{ $id }})'>Excluir</flux:button>
+            <flux:button icon="trash" wire:click='selectMantenedor({{ $id }})'>Excluir</flux:button>
         </flux:modal.trigger>
         
         <flux:modal.trigger name="edit">
-            <flux:button icon="pencil-square" wire:click='select({{ $id }})'>Editar</flux:button>
+            <flux:button icon="pencil-square" wire:click='selectMantenedor({{ $id }})'>Editar</flux:button>
         </flux:modal.trigger>
     </div>
 </flux:modal>

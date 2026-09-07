@@ -5,7 +5,9 @@
             <flux:heading size="lg">Lista de Mantenedores</flux:heading>
         </div>
         <div class="items-center flex gap-2">
-            <flux:input placeholder="Pesquise Mantenedores..." onchange="Livewire.dispatch('search', {s : this.value})" icon="magnifying-glass"/>
+            <flux:input placeholder="Pesquise Mantenedores..." 
+                        onchange="Livewire.dispatch('search', {s : this.value})" 
+                        icon="magnifying-glass"/>
 
             <flux:modal.trigger name="create">
                 <flux:button icon="plus">Novo</flux:button>
@@ -19,3 +21,7 @@
     <livewire:mantenedor.edit />
     <livewire:mantenedor.remove />
 </x-layouts::app>
+
+
+
+

@@ -33,6 +33,10 @@
                     <flux:sidebar.item icon="trophy" :href="route('avaliacao')" :current="request()->routeIs('avaliacao')" wire:navigate>
                         {{ __('Avaliações') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="paper-clip" :href="route('evidencia')" :current="request()->routeIs('evidencia')" wire:navigate>
+                        {{ __('Evidências') }}
+                    </flux:sidebar.item>
+
 
 
                     

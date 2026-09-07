@@ -35,10 +35,14 @@ new class extends Component
             }
             catch (Throwable $e){
                 if ($e->getCode() == 23505){ 
-                    Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text: "Este mantenedor já está cadastrado no sistema.");
+                    Flux::toast(variant : "danger", 
+                                heading: 'Falha ao criar o registro...', 
+                                text: "Este mantenedor já está cadastrado no sistema.");
                 }
                 else{   
-                    Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+                    Flux::toast(variant : "danger", 
+                                heading: 'Falha ao criar o registro...', 
+                                text : $e->getMessage());
                 }
             }
         }

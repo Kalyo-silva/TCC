@@ -14,6 +14,7 @@ new class extends Component
     protected $listeners = ['postInsert' => '$refresh'];
     
     protected $search = '';
+
     #[On('search')]
     public function getSearch(string $s){
         $this->search = $s;
@@ -22,10 +23,12 @@ new class extends Component
     }
 
     public function mantenedores(){
-        return mantenedor::where('nome', 'ilike', '%'.$this->search.'%')->orderby('nome', 'asc')->paginate(10);        
+        return mantenedor::where('nome', 'ilike', '%'.$this->search.'%')
+                         ->orderby('nome', 'asc')
+                         ->paginate(10);        
     }
 
-    public function select(int $id){
+    public function selectMantenedor(int $id){
         $this->dispatch('MantenedorDetail', id : $id);
     }
 };
@@ -46,15 +49,15 @@ new class extends Component
             </div>
             <div class="flex gap-2">
                 <flux:modal.trigger name="remove">
-                    <flux:button icon="trash" wire:click='select({{ $mant->id }})'></flux:button>
+                    <flux:button icon="trash" wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
                 </flux:modal.trigger>
                 
                 <flux:modal.trigger name="edit">
-                    <flux:button icon="pencil-square" wire:click='select({{ $mant->id }})'></flux:button>
+                    <flux:button icon="pencil-square" wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
                 </flux:modal.trigger>
 
                 <flux:modal.trigger name="details">
-                    <flux:button icon='information-circle' wire:click='select({{ $mant->id }})'></flux:button>
+                    <flux:button icon='information-circle' wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
                 </flux:modal.trigger>
             </div>
         </flux:card>

@@ -36,6 +36,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('/avaliacao/execute/{id}', 'pages::avaliacao.execute')->name('avaliacao.execute');
 });
 
-
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('evidencia', 'evidencia')->name('evidencia');
+});
 
 require __DIR__.'/settings.php';
