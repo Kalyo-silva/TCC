@@ -82,7 +82,7 @@ new class extends Component
         </div>
         <div class="flex gap-4">
             <flux:input placeholder="Bairro..." wire:model="bairro" />
-            <flux:input placeholder="CEP..." wire:model="cep"/>
+            <flux:input placeholder="CEP..." mask="99999-999" wire:model="cep"/>
         </div>
         <flux:input placeholder="Logradouro..." wire:model="logradouro"/>
         

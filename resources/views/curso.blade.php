@@ -17,4 +17,5 @@
     <livewire:curso.create />
     <livewire:curso.edit />
     <livewire:curso.remove />
+    <livewire:curso.prof_add />
 </x-layouts::app>

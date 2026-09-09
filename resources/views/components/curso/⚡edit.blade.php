@@ -12,9 +12,6 @@ new class extends Component
     public $id;
     public $nome;
     public $instituicao_id;
-    public $professor_id;
-
-    protected $professor;
     protected $instituicao;
 
 
@@ -27,8 +24,6 @@ new class extends Component
         if ($curso){
             $this->nome = $curso->nome;
             $this->instituicao_id = $curso->instituicao_id;
-            $this->professor_id = $curso->professor_id;
-            $this->professor = $curso->professor;
             $this->instituicao = $curso->instituicao;
         }
     }
@@ -38,7 +33,6 @@ new class extends Component
 
         $curso->nome = $this->nome;
         $curso->instituicao_id = $this->instituicao_id;
-        $curso->professor_id = $this->professor_id;
 
         $validated = $this->validate([
             "nome" => "required",
@@ -50,7 +44,7 @@ new class extends Component
                 if ($curso->save()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro criado com sucesso!');
-                    Flux::modal('create')->close();
+                    Flux::modal('edit')->close();
                 }
             }
             catch (Throwable $e){  

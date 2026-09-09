@@ -26,6 +26,7 @@ new class extends Component
             try{
                 if ($curso->save()){
                     $this->dispatch('postInsert');
+                    $this->reset();
                     Flux::toast(variant : "success", text: 'Registro criado com sucesso!');
                     Flux::modal('create')->close();
                 }
