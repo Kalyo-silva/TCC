@@ -25,7 +25,7 @@ new class extends Component
     }   
 
     public function select(int $id){
-        $this->dispatch('DetailDimensao', id : $id);
+        $this->dispatch('DetailInstrumento', id : $id);
     }
 };
 ?>

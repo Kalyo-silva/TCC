@@ -13,7 +13,7 @@ new class extends Component
     public $descricao;
     public $sequencia;
 
-    #[On('DetailDimensao')]
+    #[On('DetailInstrumento')]
     public function getIdInstrumento($id){
         $this->instrumento_id = $id;
 

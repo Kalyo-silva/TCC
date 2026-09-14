@@ -61,10 +61,11 @@ new class extends Component
     }
 };
 ?>
+
 <div class="w-full flex flex-col gap-4">
     @foreach ($this->dimensoes() as $dim)
-        <flux:card class="px-4 py-2 flex flex-col gap-2">
-            <div class="flex justify-between gap-4 items-center">  
+        <flux:card class="px-4 py-2">
+            <div class="flex justify-between gap-4 items-center py-2">  
                 <div class="flex gap-2 item-center">
                     <flux:icon.cube class="size-5"/>
                     <flux:text>{{ $dim->sequencia }}. {{  $dim->descricao  }}</flux:text>

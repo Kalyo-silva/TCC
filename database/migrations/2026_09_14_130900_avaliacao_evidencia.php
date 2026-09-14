@@ -13,11 +13,8 @@ return new class extends Migration
     {
         Schema::create('avaliacao_evidencia', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_avaliacao')->constrained('avaliacoes');
-            $table->foreignId('id_instrumento')->constrained('avaliacoes');
-            $table->foreignId('id_dimensao')->constrained('dimensoes');
-            $table->foreignId('id_indicador')->constrained('indicadores');
-            $table->foreignId('id_evidencia')->constrained('evidencias');
+            $table->foreignId('avaliacao_indicador_id')->constrained('avaliacao_indicador');
+            $table->foreignId('evidencia_id')->constrained('evidencias');
             $table->timestamps();
         });
     }

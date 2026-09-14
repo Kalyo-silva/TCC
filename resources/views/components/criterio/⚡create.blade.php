@@ -21,7 +21,7 @@ new class extends Component
 
         if ($indicador){
             $this->descricaoindicador = $indicador->descricao;
-        
+            $this->descricao = '';
             $this->sequencia = criterio::where('indicador_id', $this->indicador_id)->max('sequencia')+1;
         }
     }

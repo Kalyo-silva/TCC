@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('descricao');
             $table->date('data_inicio');
             $table->date('data_fim');
+            $table->smallInteger('situacao'); // 0 - Não iniciada | 1 - Iniciada | 2 - Concluida
             $table->foreignId('usuario_id')->constrained('users');
             $table->timestamps();
         });

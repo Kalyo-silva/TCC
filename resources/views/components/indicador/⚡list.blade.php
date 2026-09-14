@@ -63,12 +63,11 @@ new class extends Component
 };
 ?>
 
-<div class="flex flex-col gap-2">
-
+<div>
     @foreach ($this->indicadores() as $ind)
         <flux:separator />
 
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 py-2">
             <div class="flex items-center gap-2 ml-6">
                 <flux:icon.chart-bar class="size-5"/>
                 <flux:text>{{ $ind->sequencia.'. '.$ind->descricao  }}</flux:text>
