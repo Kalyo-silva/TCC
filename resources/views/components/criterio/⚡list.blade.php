@@ -63,7 +63,7 @@ new class extends Component
 };
 ?>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-2 mb-2">
     @foreach ($this->criterios() as $cri)
         <flux:separator />
 
@@ -92,7 +92,4 @@ new class extends Component
             </flux:dropdown>
         </div>
     @endforeach
-    
-    <livewire:criterio.remove />
-    <livewire:criterio.edit />
 </div>

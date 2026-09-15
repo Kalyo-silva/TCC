@@ -102,8 +102,4 @@ new class extends Component
 
         <livewire:criterio.list :indicador_id="$ind->id"/>
     @endforeach
-
-    <livewire:indicador.remove />
-    <livewire:indicador.edit />
-    <livewire:criterio.create />
 </div>

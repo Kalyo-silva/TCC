@@ -13,11 +13,8 @@ new class extends Component
     public $descricao;
     public $sequencia;
 
-    #[On('DetailInstrumento')]
-    public function getIdInstrumento($id){
-        $this->instrumento_id = $id;
-
-        $instrumento = instrumento::find($this->instrumento_id);
+    public function mount($instrumento_id){
+        $instrumento = instrumento::find($instrumento_id);
 
         if ($instrumento){
             $this->tituloInstrumento = $instrumento->titulo;

@@ -19,6 +19,12 @@ new class extends Component
         $this->dispatch('DetailDimensao', id : $id);
     }
 
+    public function selectdimensaoCreate($id){
+        $this->dispatch('DetailDimensao', id: $id);
+
+        Flux::modal('add_indicador')->show();
+    }
+
     public function up($id){
         $dimensao = dimensao::findOrFail($id);
 
@@ -74,10 +80,8 @@ new class extends Component
                     <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
                     
                     <flux:menu>
-                        <flux:modal.trigger name="add_indicador">
-                            <flux:menu.item icon="plus-circle" wire:click='selectdimensao({{ $dim->id }})'>Adicionar Indicador</flux:menu.item>
-                        </flux:modal.trigger>
-
+                        <flux:menu.item icon="plus-circle" wire:click='selectdimensaoCreate({{ $dim->id }})'>Adicionar Indicador</flux:menu.item>
+                        
                         <flux:menu.item icon="arrow-up" wire:click='up({{ $dim->id }})'>Para Cima</flux:menu.item>
 
                         <flux:menu.item icon="arrow-down" wire:click='down({{ $dim->id }})'>Para Baixo</flux:menu.item>
@@ -93,12 +97,21 @@ new class extends Component
 
                 </flux:dropdown>
             </div>
-
+          
             <livewire:indicador.list :dimensao_id="$dim->id"/>
         </flux:card>
     @endforeach
 
-    <livewire:indicador.create />
     <livewire:dimensao.remove />
     <livewire:dimensao.edit />
+
+    <livewire:indicador.create />
+    <livewire:indicador.remove />
+    <livewire:indicador.edit />
+
+    <livewire:criterio.create />
+    <livewire:criterio.remove />
+    <livewire:criterio.edit />
 </div>
+
+

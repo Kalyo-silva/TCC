@@ -25,6 +25,7 @@ new class extends Component
         $avaliacao->ano = $this->ano;
         $avaliacao->data_inicio = $this->data_inicio;
         $avaliacao->data_fim = $this->data_fim;
+        $avaliacao->situacao = 0;
         $avaliacao->usuario_id = auth()->user()->id;
 
         $validated = $this->validate([

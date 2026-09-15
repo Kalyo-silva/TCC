@@ -24,7 +24,13 @@ new class extends Component
 
     public function getProfs(){
         if ($this->curso){
-            return professor::whereNotIn('id', $this->curso->pluck('professor_id'))->orderby('nome', 'asc')->get();
+            return professor::whereNotIn('id', $this->curso->pluck('professor_id'))->whereNotIn('id', [$this->getCoordenador()->id])->orderby('nome', 'asc')->get();
+        }
+    }
+    
+    public function getCoordenador(){
+        if ($this->curso_id){
+            return curso::find($this->curso_id)->coordenador;
         }
     }
 
@@ -82,28 +88,6 @@ new class extends Component
         <flux:heading size="">Gerenciar Corpo Docente</flux:heading>
     </div>
 
-    <div class="gap-4 grid grid-cols-2">
-        @if ($this->curso != null)
-            @foreach ($this->curso as $curso)
-                <flux:card class="flex gap-8 items-center justify-between"> 
-                    <div class="flex gap-2 items-center">   
-                        <div class="flex flex-col gap-1">
-                            {{ $curso->professor->nome }}
-                            <flux:badge size='sm' class="w-fit">{{$curso->professor->titulacao}}</flux:badge>
-                        </div>
-                    </div>
-                    <flux:dropdown>   
-                        <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
-                        
-                        <flux:menu>
-                                <flux:menu.item icon="user-minus" wire:click='remProf({{ $curso->id }})'>Desvincular</flux:menu.item>
-                        </flux:menu>
-                    </flux:dropdown>
-                </flux:card>
-            @endforeach
-        @endif
-    </div>
-
     @if ($this->curso)
         <div class="flex flex-col gap-2">
             <flux:text>Vincular Professores</flux:text>
@@ -115,8 +99,54 @@ new class extends Component
                         <flux:select.option value="{{ $prof->id }}">{{$prof->nome}}</flux:select.option>
                     @endforeach
                 </flux:select>
-                <flux:button icon='plus' wire:click='addProf()'/>
+                <flux:button icon='plus' wire:click='addProf()' class="cursor-pointer"/>
             </flux:button.group>
         </div>
     @endif
+
+    <div class="flex flex-col gap-2">
+        <flux:text>Corpo docente</flux:text>
+        <div>
+            @if ($cordenador = $this->getCoordenador())
+                <flux:card class="flex gap-8 items-center justify-between"> 
+                    <div class="flex gap-2 items-center">   
+                        <div class="flex flex-col gap-1">
+                            {{ $cordenador->nome }}
+                            <flux:badge size='sm' class="w-fit">Coordenador do curso</flux:badge>
+                        </div>
+                    </div>
+                    <flux:dropdown>   
+                        <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" class="cursor-pointer"></flux:button>
+                        
+                        <flux:menu>
+                                <flux:menu.item icon="magnifying-glass" wire:click=''>Visualizar</flux:menu.item>
+                        </flux:menu>
+                    </flux:dropdown>
+                </flux:card>
+
+            @endif
+        </div>
+    </div>
+    <div class="gap-4 grid grid-cols-2">
+        @if ($this->curso != null)
+            @foreach ($this->curso as $curso)
+                <flux:card class="flex gap-8 items-center justify-between"> 
+                    <div class="flex gap-2 items-center">   
+                        <div class="flex flex-col gap-1">
+                            {{ $curso->professor->nome }}
+                            <flux:badge size='sm' class="w-fit">{{$curso->professor->titulacao}}</flux:badge>
+                        </div>
+                    </div>
+                    <flux:dropdown>   
+                        <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" class="cursor-pointer"></flux:button>
+                        
+                        <flux:menu>
+                            <flux:menu.item icon="magnifying-glass" wire:click=''>Visualizar</flux:menu.item>
+                            <flux:menu.item icon="user-minus" wire:click='remProf({{ $curso->id }})'>Desvincular</flux:menu.item>
+                        </flux:menu>
+                    </flux:dropdown>
+                </flux:card>
+            @endforeach
+        @endif
+    </div>
 </flux:modal>
