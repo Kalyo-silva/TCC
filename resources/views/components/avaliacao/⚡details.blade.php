@@ -15,6 +15,7 @@ new class extends Component
     public $ano;
     public $data_inicio;
     public $data_fim;
+    public $situacao;
 
     public $usuarioNome;
     public $tituloInstrumento;
@@ -34,6 +35,7 @@ new class extends Component
             $this->ano            = $avaliacao->ano            ; 
             $this->data_inicio    = $avaliacao->data_inicio    ; 
             $this->data_fim       = $avaliacao->data_fim       ; 
+            $this->situacao       = $avaliacao->situacao       ; 
             
             $this->usuarioNome     = $avaliacao->usuario->name     ;
             $this->tituloInstrumento = $avaliacao->instrumento->titulo;
@@ -43,6 +45,22 @@ new class extends Component
 
     public function select(int $id){
         $this->dispatch('AvaliacaoDetail', id : $id);
+    }
+
+    public function executeAvaliacao(){
+        if ($this->situacao == 0){
+
+            $avaliacao = avaliacao::find($this->id);
+            if ($avaliacao){
+                $avaliacao->situacao = 1; 
+            
+                if ($avaliacao->save()){
+                    $this->dispatch('postInsert');
+                }
+            }
+        }
+
+        return to_route('avaliacao.execute', ['id' => $this->id]);
     }
 }
 ?>
@@ -61,8 +79,16 @@ new class extends Component
                     <flux:input label="Ano" wire:model='ano' readonly/>
                 </div>
             </div>
-            <flux:input label="Curso" wire:model='nomeCurso' readonly/>
-            <flux:input label="Instrumento de Avaliação" wire:model='tituloInstrumento' readonly/>
+
+            <flux:input.group label="Curso">
+                <flux:button icon='book-open'/>
+                <flux:input wire:model='nomeCurso' readonly/>
+            </flux:input.group>
+            <flux:input.group label="Instrumento de Avaliação">
+                <flux:button icon='clipboard-document-list'/>
+                <flux:input wire:model='tituloInstrumento' readonly/>
+            </flux:input.group>
+
             <div class="flex gap-4">
                 <div class="w-5/10">
                     <flux:input label="Data Inicial" type='date' wire:model='data_inicio' readonly/>
@@ -71,20 +97,30 @@ new class extends Component
                     <flux:input label="Data Final" type='date' wire:model='data_fim' readonly/>
                 </div>
             </div>
-            <flux:input label="Usuário responsável" wire:model='usuarioNome' readonly/>
+            <flux:input.group label="Usuário responsável">
+                <flux:button icon='user'/>
+                <flux:input wire:model='usuarioNome' readonly/>
+            </flux:input.group>
 
-            <div class="flex flex-row-reverse gap-4">
-                @if ($this->id)
-                    <a href="{{ route('avaliacao.execute', ['id' => $this->id]) }}"> 
-                        <flux:button type="submit" class="mt-4" icon="play" wire:click="select({{ $this->id }})">Executar</flux:button> 
-                    </a>
-                @endif
-                <flux:modal.trigger name="edit"> 
-                    <flux:button type="submit" class="mt-4" icon="pencil-square" wire:click="select({{ $this->id }})">Editar</flux:button> 
-                </flux:modal.trigger>
+            <div class="grid grid-cols-4  gap-4">
                 <flux:modal.trigger name="remove"> 
                     <flux:button type="submit" class="mt-4" icon="trash" wire:click='select({{ $this->id }})'>Remover</flux:button> 
                 </flux:modal.trigger>
+                <flux:modal.trigger name="edit"> 
+                    <flux:button type="submit" class="mt-4" icon="pencil-square" wire:click="select({{ $this->id }})">Editar</flux:button> 
+                </flux:modal.trigger>
+                <flux:button class="mt-4" icon="eye" wire:click="select({{ $this->id }})">Visualizar</flux:button> 
+                @if ($this->id)
+                    @if ($this->situacao == 0)
+                        <flux:button type="submit" class="mt-4" icon="play" wire:click="executeAvaliacao()">Executar</flux:button> 
+                    @elseif ($this->situacao == 1)
+                        <flux:button type="submit" class="mt-4" icon="play" wire:click="executeAvaliacao()">Continuar</flux:button> 
+                    @else
+                        <flux:tooltip content="Avaliação já concluida.">
+                            <flux:button disabled class="mt-4" icon="play">Executar</flux:button> 
+                        </flux:tooltip>
+                    @endif
+                @endif
             </div>
         </div>
 </flux:modal>

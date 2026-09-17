@@ -40,18 +40,30 @@ new class extends Component
                 <flux:heading size="lg">{{ $ava->descricao }}</flux:heading>
                 <flux:text size="lg">{{ $ava->curso->nome }}</flux:text>
             </div>
-            <div class="flex gap-2">
-                <flux:modal.trigger name="remove">
-                    <flux:button icon="trash" wire:click='select({{ $ava->id }})'></flux:button>
-                </flux:modal.trigger>
-                
-                <flux:modal.trigger name="edit">
-                    <flux:button icon="pencil-square" wire:click='select({{ $ava->id }})'></flux:button>
-                </flux:modal.trigger>
 
-                <flux:modal.trigger name="details">
-                    <flux:button icon='information-circle' wire:click='select({{ $ava->id }})'></flux:button>
-                </flux:modal.trigger>
+            <div class="flex flex-col items-end gap-2">
+                
+                @if ($ava->situacao == 0)
+                    <flux:badge size='sm'>Não iniciada</flux:badge>
+                @elseif ($ava->situacao == 1)
+                    <flux:badge size='sm' color="blue">Em andamento</flux:badge>
+                @else
+                    <flux:badge size='sm' color="green">Concluida</flux:badge>
+                @endif
+                <div class="flex gap-2">
+                    <flux:modal.trigger name="remove">
+                        <flux:button icon="trash" wire:click='select({{ $ava->id }})'></flux:button>
+                    </flux:modal.trigger>
+                    
+                    <flux:modal.trigger name="edit">
+                        <flux:button icon="pencil-square" wire:click='select({{ $ava->id }})'></flux:button>
+                    </flux:modal.trigger>
+
+                    <flux:modal.trigger name="details">
+                        <flux:button icon='information-circle' wire:click='select({{ $ava->id }})'></flux:button>
+                    </flux:modal.trigger>
+                </div>
+            
             </div>
         </flux:card>
             

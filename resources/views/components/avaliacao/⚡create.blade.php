@@ -74,26 +74,30 @@ new class extends Component
         <form wire:submit='save' class="flex flex-col gap-4 mt-4">
             <div class="flex gap-4">
                 <div class="w-8/10">
-                    <flux:input label="Descrição..." wire:model='descricao'/>
+                    <flux:input label="Descrição" placeholder="Descrição..." wire:model='descricao'/>
                 </div>
                 <div class="w-2/10">
-                    <flux:input label="Ano..." wire:model='ano'/>
+                    <flux:input label="Ano" placeholder="Ano..." wire:model='ano'/>
                 </div>
             </div>
-            <flux:select label="Curso..."  wire:model='curso_id'>
-                    <flux:select.option value="dummy">Selecione</flux:select.option>
-                @foreach ($this->cursos() as $cur)
-                    <flux:select.option value="{{ $cur->id }}">{{ $cur->nome }}</flux:select.option>
-                @endforeach
-
-            </flux:select>
-            <flux:select label="Instrumento de Avaliação..." wire:model='instrumento_id'>
-                    <flux:select.option value="dummy">Selecione</flux:select.option>
-                @foreach ($this->instrumentos() as $inst)
-                    <flux:select.option value="{{ $inst->id }}">{{ $inst->titulo }}</flux:select.option>
-                @endforeach
-
-            </flux:select>
+            <flux:input.group label="Curso">
+                <flux:button icon='book-open'/>
+                <flux:select wire:model='curso_id'>
+                        <flux:select.option value="dummy">Selecione...</flux:select.option>
+                    @foreach ($this->cursos() as $cur)
+                        <flux:select.option value="{{ $cur->id }}">{{ $cur->nome }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            </flux:input.group>
+            <flux:input.group label="Instrumento de Avaliação">
+                <flux:button icon='clipboard-document-list'/>
+                <flux:select wire:model='instrumento_id'>
+                        <flux:select.option value="dummy">Selecione...</flux:select.option>
+                    @foreach ($this->instrumentos() as $inst)
+                        <flux:select.option value="{{ $inst->id }}">{{ $inst->titulo }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            </flux:input.group>
             <div class="flex gap-4">
                 <div class="w-5/10">
                     <flux:input label="Data Inicial" type='date' wire:model='data_inicio'/>
