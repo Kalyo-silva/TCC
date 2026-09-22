@@ -13,47 +13,59 @@ new class extends Component
     public $firstDimensao = true;
     
     public $lastIndicador = false;
-    public $firstIndicador = false;
+    public $firstIndicador = true;
 
     public function mount($id){
         $this->avaliacao = avaliacao::findOrFail($id);
     }
 
-    public function nextDimensao(){        
-        if ($this->dimensao == $this->avaliacao->instrumento->dimensoes->count() -1) {
-            $this->lastDimensao = true;
-        }else{  
+    public function nextDimensao(){
+        if ($this->dimensao != $this->avaliacao->instrumento->dimensoes->count()-1)  {
             $this->dimensao += 1;
             $this->indicador = 0;
             $this->firstDimensao = false;
+
+            $this->lastIndicador = false;
+            $this->firstIndicador = true;
         }
-        
+
+        if ($this->dimensao == $this->avaliacao->instrumento->dimensoes->count()-1) {
+            $this->lastDimensao = true;
+        }
     }
     public function previousDimensao(){     
-        if ($this->dimensao == 0) {
-            $this->firstDimensao = true;
-        }else{  
+        if ($this->dimensao != 0){  
             $this->dimensao -= 1;
             $this->indicador = 0;
             $this->lastDimensao = false;
+
+            $this->lastIndicador = false;
+            $this->firstIndicador = true;
+        }
+        
+        if ($this->dimensao == 0) {
+            $this->firstDimensao = true;
         }
     }
 
     public function nextIndicador(){        
-        if ($this->indicador == $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1) {
-            $this->lastIndicador = true;
-        }else{  
+        if ($this->indicador != $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1){
             $this->indicador += 1;
             $this->firstIndicador = false;
         }
-        
+
+        if ($this->indicador == $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1) {
+            $this->lastIndicador = true;
+        }
     }
     public function previousIndicador(){     
-        if ($this->indicador == 0) {
-            $this->firstIndicador = true;
-        }else{  
+        if ($this->indicador != 0){  
             $this->indicador -= 1;
             $this->lastIndicador = false;
+        }
+
+        if ($this->indicador == 0) {
+            $this->firstIndicador = true;
         }
     }
 };
@@ -110,7 +122,9 @@ new class extends Component
     <div class="flex flex-col gap-2">
         <div class="flex items-center justify-between">
             <flux:heading>Evidências Anexadas</flux:heading>
-            <flux:button variant="ghost" icon="plus"></flux:button>
+            <flux:modal.trigger name='evidencia_list'>
+                <flux:button icon="paper-clip">Anexar</flux:button>
+            </flux:modal.trigger>
         </div>
         
         <flux:card>
@@ -122,4 +136,7 @@ new class extends Component
         <flux:button :disabled="$this->firstIndicador" icon="arrow-left"                    wire:click='previousIndicador()'>Anterior</flux:button>
         <flux:button :disabled="$this->firstDimensao"  icon="chevron-double-left"           wire:click='previousDimensao()'>Dimensão Anterior</flux:button>
     </div>
+
+
+    <livewire:evidencia.listmodal />
 </div>
