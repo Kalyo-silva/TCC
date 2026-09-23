@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('titulo');
             $table->smallInteger('ano');
             $table->smallInteger('tipo'); // 1 - documento | 2 - Imagem | 3 - Vídeo | 4 - áudio | 5 - link | 6 - texto
+            $table->text('file_name');
             $table->text('file_path');
             $table->text('link');
             $table->text('text');

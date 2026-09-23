@@ -7,9 +7,23 @@ new class extends Component
 {
     use WithFileUploads;
 
-    public $file;
     public $titulo;
     public $ano;
+    public $tipo;
+
+    public $file;
+    public $link;
+    public $texto;
+ 
+    public function changeTipo(){
+        $this->file = Null;
+        $this->link = Null;
+        $this->texto = Null;
+    }
+
+    public function mount(){
+        $this->ano = now()->year;
+    }
 };
 ?>
 
@@ -20,14 +34,18 @@ new class extends Component
     </div>
     <form class="flex flex-col gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-3/4">
-                <flux:input placeholder="Titulo..." wire:model='titulo'/>
-            </div>
-            <div class="w-1/4">
-                <flux:input placeholder="Ano..." wire:model='ano' type="number"/>
-            </div>
+            <flux:button.group class="w-full">
+                <div class="w-4/5">
+                    <flux:input placeholder="Titulo..." wire:model='titulo'/>
+                </div>
+                <div class="w-1/5">
+                    <flux:input placeholder="Ano..." wire:model='ano' type="number"/>
+                </div>
+            </flux:button.group>
         </div>
-        <flux:select wire:model="tipo" placeholder='Tipo...'> 
+
+        <flux:select wire:model.live="tipo" wire:change="changeTipo()">
+            <flux:select.option value='dummy'>Tipo...</flux:select.option>
             <flux:select.option value='1'>Documento</flux:select.option>
             <flux:select.option value='2'>Imagem</flux:select.option>
             <flux:select.option value='3'>Vídeo</flux:select.option>
@@ -35,5 +53,26 @@ new class extends Component
             <flux:select.option value='5'>Texto</flux:select.option>
             <flux:select.option value='6'>Link</flux:select.option>
         </flux:select>
+
+        @if ($this->tipo == '6')
+            <flux:input wire:model='link' placeholder="Link..."/>
+        @elseif ($this->tipo == '5')
+            <flux:textarea type="text" wire:model='texto' placeholder="Texto..." rows="20"> </flux:textarea>
+        @elseif ($this->tipo !="dummy" && $this->tipo)
+            <div>
+                <label for="file">
+                    <flux:card class="h-32 rounde-lg flex flex-col gap-1 items-center justify-center">
+                        <flux:icon.cloud-arrow-up class="size-16"/>
+                        <flux:heading>selecione um arquivo...</flux:heading>
+                    </flux:card>
+                </label>
+                <flux:input type="file" id="file" wire:model='file' class="hidden"/>
+            </div>
+        @endif
+
+        <div class="flex flex-row-reverse items-center gap-2">
+            <flux:button variant='primary' icon:trailing="paper-airplane">Enviar</flux:button>
+            <flux:button icon="x-circle">cancelar</flux:button>
+        </div>
     </form>
 </flux:modal>
