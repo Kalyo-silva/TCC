@@ -61,12 +61,37 @@ new class extends Component
         @elseif ($this->tipo !="dummy" && $this->tipo)
             <div>
                 <label for="file">
-                    <flux:card class="h-32 rounde-lg flex flex-col gap-1 items-center justify-center">
-                        <flux:icon.cloud-arrow-up class="size-16"/>
-                        <flux:heading>selecione um arquivo...</flux:heading>
-                    </flux:card>
+                    @if ($this->file && method_exists($this->file, 'temporaryUrl'))
+                        @if ($this->tipo == 1)
+                            <flux:card class="h-64 rounde-lg flex flex-col gap-1 items-center justify-center">
+                                <flux:icon.document-text class="size-16"/>
+                                <div class="flex flex-col items-center">
+                                    <flux:heading size="lg" class="underline">{{$this->file->getClientOriginalName()}}</flux:heading>
+                                </div>
+                            </flux:card>
+                        @elseif ($this->tipo == 2)
+                            <flux:card class="h-64 rounde-lg flex flex-col items-center gap-2">
+                                <img class="h-full object-cover rounded-lg border" src="{{ $this->file->temporaryUrl() }}">
+                                <div class="flex flex-col items-center">
+                                    <flux:heading size="lg" class="underline">{{$this->file->getClientOriginalName()}}</flux:heading>
+                                </div>
+                            </flux:card>
+                        @elseif ($this->tipo == 3)
+                            <flux:card class="h-64 rounde-lg flex flex-col gap-1 items-center justify-center">
+                                <flux:icon.video-camera class="size-16"/>
+                                <div class="flex flex-col items-center">
+                                    <flux:heading size="lg" class="underline">{{$this->file->getClientOriginalName()}}</flux:heading>
+                                </div>
+                            </flux:card>
+                        @endif
+                    @else
+                        <flux:card class="h-64 rounde-lg flex flex-col gap-1 items-center justify-center">
+                            <flux:icon.cloud-arrow-up class="size-16"/>
+                            <flux:heading>selecione um arquivo...</flux:heading>
+                        </flux:card>    
+                    @endif
                 </label>
-                <flux:input type="file" id="file" wire:model='file' class="hidden"/>
+                <flux:input type="file" name="file" id="file" wire:model='file' class="hidden"/>
             </div>
         @endif
 
