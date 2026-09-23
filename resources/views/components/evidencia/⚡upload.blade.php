@@ -13,7 +13,7 @@ new class extends Component
 };
 ?>
 
-<flux:modal name='create' class="min-w-2xl flex flex-col gap-4">
+<flux:modal name='upload' class="min-w-2xl flex flex-col gap-4">
     <div class="flex items-center gap-2">
         <flux:icon.paper-clip/>
         <flux:heading size="">Nova Evidência</flux:heading>

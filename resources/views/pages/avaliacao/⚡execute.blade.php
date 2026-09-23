@@ -123,7 +123,7 @@ new class extends Component
         <div class="flex items-center justify-between">
             <flux:heading>Evidências Anexadas</flux:heading>
             <flux:modal.trigger name='evidencia_list'>
-                <flux:button icon="paper-clip">Anexar</flux:button>
+                <flux:button icon="paper-clip" size="sm">Anexar</flux:button>
             </flux:modal.trigger>
         </div>
         
@@ -131,10 +131,10 @@ new class extends Component
         </flux:card>
     </div>
     <div class="flex gap-2 flex-row-reverse">
-        <flux:button :disabled="$this->lastDimensao"   icon:trailing="chevron-double-right" wire:click='nextDimensao()' >Proxíma Dimensão</flux:button>
-        <flux:button :disabled="$this->lastIndicador"  icon:trailing="arrow-right"          wire:click='nextIndicador()'>Proxímo</flux:button>
-        <flux:button :disabled="$this->firstIndicador" icon="arrow-left"                    wire:click='previousIndicador()'>Anterior</flux:button>
-        <flux:button :disabled="$this->firstDimensao"  icon="chevron-double-left"           wire:click='previousDimensao()'>Dimensão Anterior</flux:button>
+        <flux:button size='sm' :disabled="$this->lastDimensao"   icon:trailing="chevron-double-right" wire:click='nextDimensao()' >Proxíma Dimensão</flux:button>
+        <flux:button size='sm' :disabled="$this->lastIndicador"  icon:trailing="arrow-right"          wire:click='nextIndicador()'>Proxímo</flux:button>
+        <flux:button size='sm' :disabled="$this->firstIndicador" icon="arrow-left"                    wire:click='previousIndicador()'>Anterior</flux:button>
+        <flux:button size='sm' :disabled="$this->firstDimensao"  icon="chevron-double-left"           wire:click='previousDimensao()'>Dimensão Anterior</flux:button>
     </div>
 
 
