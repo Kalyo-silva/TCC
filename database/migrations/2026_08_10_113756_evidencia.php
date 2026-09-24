@@ -16,10 +16,10 @@ return new class extends Migration
             $table->text('titulo');
             $table->smallInteger('ano');
             $table->smallInteger('tipo'); // 1 - documento | 2 - Imagem | 3 - Vídeo | 4 - áudio | 5 - link | 6 - texto
-            $table->text('file_name');
-            $table->text('file_path');
-            $table->text('link');
-            $table->text('text');
+            $table->text('file_name')->nullable();
+            $table->text('file_path')->nullable();
+            $table->text('link')->nullable();
+            $table->text('text')->nullable();
             $table->timestamps();
         });
     }

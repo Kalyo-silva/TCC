@@ -4,7 +4,12 @@ use Livewire\Component;
 
 new class extends Component
 {
-    //
+    public $documentos = True;
+    public $imagens = True;
+    public $videos = True;
+    public $audios = True;
+    public $textos = True;
+    public $links = True;
 };
 ?>
 
@@ -18,16 +23,16 @@ new class extends Component
             <flux:button size="sm" icon="funnel">Arquivos</flux:button>
             
             <flux:menu>
-                <flux:menu.checkbox >Documentos</flux:menu.checkbox>
-                <flux:menu.checkbox >Imagens</flux:menu.checkbox>
-                <flux:menu.checkbox >Vídeos</flux:menu.checkbox>
-                <flux:menu.checkbox >Áudios</flux:menu.checkbox>
-                <flux:menu.checkbox >Textos</flux:menu.checkbox>
-                <flux:menu.checkbox >Links</flux:menu.checkbox>
+                <flux:menu.checkbox wire:model.live='documentos'>Documentos</flux:menu.checkbox>
+                <flux:menu.checkbox wire:model.live='imagens'>Imagens</flux:menu.checkbox>
+                <flux:menu.checkbox wire:model.live='videos'>Vídeos</flux:menu.checkbox>
+                <flux:menu.checkbox wire:model.live='audios'>Áudios</flux:menu.checkbox>
+                <flux:menu.checkbox wire:model.live='textos'>Textos</flux:menu.checkbox>
+                <flux:menu.checkbox wire:model.live='links'>Links</flux:menu.checkbox>
             </flux:menu>
         
         </flux:dropdown>
-        
+
         <div>
             <flux:input size="sm"  placeholder="Pesquise evidências..." onchange="Livewire.dispatch('search', {s : this.value})" icon="magnifying-glass"/>
         </div>
@@ -35,34 +40,45 @@ new class extends Component
     </div>
     <div class="w-full h-10/12 overflow-y-scroll flex gap-2">
         <div class="w-4/6 flex flex-col gap-2">
-
             <div>
                 <flux:badge rounded icon="clock" size="lg" class="w-fit">Adicionados recentemente</flux:badge>
             </div>
 
-            <div>
-                <flux:badge rounded icon="document" size="lg" class="w-fit">Documentos</flux:badge>
-            </div>
+            @if($this->documentos)
+                <div>
+                    <flux:badge rounded icon="document" size="lg" class="w-fit">Documentos</flux:badge>
+                </div>
+            @endif
 
+            @if($this->imagens)
             <div>
                 <flux:badge rounded icon="photo" size="lg" class="w-fit">Imagens</flux:badge>
             </div>
+            @endif
 
+            @if($this->videos)
             <div>
                 <flux:badge rounded icon="video-camera" size="lg" class="w-fit">Vídeos</flux:badge>
             </div>
+            @endif
 
+            @if($this->audios)
             <div>
                 <flux:badge rounded icon="speaker-wave" size="lg" class="w-fit">Áudios</flux:badge>
             </div>
+            @endif
 
+            @if($this->textos)
             <div>
                 <flux:badge rounded icon="book-open" size="lg" class="w-fit">Textos</flux:badge>
             </div>
+            @endif
 
+            @if($this->links)
             <div>
                 <flux:badge rounded icon="paper-clip" size="lg" class="w-fit">Links</flux:badge>
             </div>
+            @endif
 
         </div>
         <flux:card class="w-2/6">

@@ -8,5 +8,5 @@ class evidencia extends Model
 {
     protected $table = 'evidencias';
 
-    protected $fillable = ['titulo', 'ano', 'tipo', 'file_path', 'link', 'text'];
+    protected $fillable = ['titulo', 'ano', 'tipo', 'file_name', 'file_path', 'link', 'text'];
 }
