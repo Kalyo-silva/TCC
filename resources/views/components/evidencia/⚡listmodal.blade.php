@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Component;
+use App\Models\evidencia;
 
 new class extends Component
 {
@@ -10,6 +11,19 @@ new class extends Component
     public $audios = True;
     public $textos = True;
     public $links = True;
+
+    public $lista_images = [];
+    public $recentes;
+
+    protected $listeners = ['postInsert' => '$refresh'];
+
+    public function mount(){
+        $images = evidencia::where('tipo', 2)->get();
+
+        $this->recentes = evidencia::orderBy('created_at', 'desc')->get();
+
+        array_push($this->lista_images, $images);
+    }
 };
 ?>
 
@@ -38,10 +52,31 @@ new class extends Component
         </div>
 
     </div>
-    <div class="w-full h-10/12 overflow-y-scroll flex gap-2">
-        <div class="w-4/6 flex flex-col gap-2">
-            <div>
+    <div class="w-full h-10/12 overflow-y-scroll flex gap-4">
+        <div class="w-4/6 flex flex-col gap-4">
+            <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="clock" size="lg" class="w-fit">Adicionados recentemente</flux:badge>
+
+                <div class="grid grid-cols-5 gap-4 w-full ">
+                    @foreach ($this->recentes as $recente)
+                        <flux:card class="h-10 flex items-end gap-2 px-4 py-2 cursor-pointer hover:border-2">
+                            @if($recente->tipo == 1)
+                                <flux:icon.document class="size-6"/>
+                            @elseif($recente->tipo == 2)
+                                <flux:icon.photo class="size-6"/>
+                            @elseif($recente->tipo == 3)
+                                <flux:icon.video-camera class="size-6"/>
+                            @elseif($recente->tipo == 4)
+                                <flux:icon.speaker-wave class="size-6"/>
+                            @elseif($recente->tipo == 5)
+                                <flux:icon.book-open class="size-6"/>
+                            @elseif($recente->tipo == 6)
+                                <flux:icon.paper-clip class="size-6"/>
+                            @endif
+                            <flux:heading class="underline truncate">{{$recente->titulo}}</flux:heading>
+                        </flux:card>
+                    @endforeach
+                </div>
             </div>
 
             @if($this->documentos)
@@ -51,8 +86,22 @@ new class extends Component
             @endif
 
             @if($this->imagens)
-            <div>
+            <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="photo" size="lg" class="w-fit">Imagens</flux:badge>
+
+                <div class="flex flex-col gap-4 w-fit ">
+                    @foreach ($this->lista_images as $images)
+                        <div class="flex flex-row items-center gap-4">
+                            @foreach ($images as $img)
+                                <img src="{{ asset('storage/evidencias/'.$img->file_path) }}" class="h-16 rounded-lg border hover:border-2 cursor-pointer">    
+                            @endforeach
+                        </div>
+                        @endforeach
+                </div>
+
+                <div class="flex w-full justify-center">
+                    <flux:button variant="subtle" icon="plus" size="xs">Mais Imagens</flux:button>
+                </div>
             </div>
             @endif
 
