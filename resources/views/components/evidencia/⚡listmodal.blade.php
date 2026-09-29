@@ -6,38 +6,101 @@ use App\Models\evidencia;
 new class extends Component
 {
     public $documentos = True;
-    public $imagens = True;
-    public $videos = True;
-    public $audios = True;
-    public $textos = True;
-    public $links = True;
-
-    public $lista_images = [];
+    public $page_documentos = 1;
+    public $count_documentos = 0;
     public $lista_documentos = [];
+
+    public $imagens = True;
+    public $page_imagens = 1;
+    public $count_images = 0;
+    public $lista_images = [];
+
+    public $videos = True;
+    public $page_videos = 1;
+    public $count_videos = 0;
     public $lista_videos = [];
+
+    public $audios = True;
+    public $page_audios = 1;
+    public $count_audios = 0;
     public $lista_audios = [];
+
+    public $textos = True;
+    public $page_textos = 1;
+    public $count_textos = 0;
     public $lista_textos = [];
+
+    public $links = True;
+    public $page_links = 1;
+    public $count_links = 0;
     public $lista_links = [];
+
     public $recentes;
 
     protected $listeners = ['postInsert' => '$refresh'];
 
     public function mount(){
-        $documentos = evidencia::where('tipo', 1)->get();
-        $images = evidencia::where('tipo', 2)->get();
-        $videos = evidencia::where('tipo', 3)->get();
-        $audios = evidencia::where('tipo', 4)->get();
-        $textos = evidencia::where('tipo', 5)->get();
-        $links = evidencia::where('tipo', 6)->get();
+        $this->lista_documentos = evidencia::where('tipo', 1)->take(4 * $this->page_documentos)->get();
+        $this->count_documentos = evidencia::where('tipo', 1)->count();
 
-        $this->recentes = evidencia::orderBy('created_at', 'desc')->take(5)->get();
+        $this->lista_images = evidencia::where('tipo', 2)->take(4 * $this->page_imagens)->get();
+        $this->count_images = evidencia::where('tipo', 2)->count();
 
-        array_push($this->lista_documentos, $documentos);
-        array_push($this->lista_images, $images);
-        array_push($this->lista_videos, $videos);
-        array_push($this->lista_audios, $audios);
-        array_push($this->lista_textos, $textos);
-        array_push($this->lista_links, $links);
+        $this->lista_videos = evidencia::where('tipo', 3)->take(4 * $this->page_videos)->get();
+        $this->count_videos = evidencia::where('tipo', 3)->count();
+
+        $this->lista_audios = evidencia::where('tipo', 4)->take(3 * $this->page_audios)->get();
+        $this->count_audios = evidencia::where('tipo', 4)->count();
+
+        $this->lista_textos = evidencia::where('tipo', 5)->take(4 * $this->page_textos)->get();
+        $this->count_textos = evidencia::where('tipo', 5)->count();
+
+        $this->lista_links = evidencia::where('tipo', 6)->take(4 * $this->page_links)->get();
+        $this->count_links = evidencia::where('tipo', 6)->count();
+
+        $this->recentes = evidencia::orderBy('created_at', 'desc')->take(4)->get();
+    }
+
+    public function nextPageDcs(){
+        $this->page_documentos += 1;
+        $this->lista_documentos = evidencia::where('tipo', 1)->take(4 * $this->page_documentos)->get();
+
+        $this->dispatch('postInsert');
+    }
+
+    public function nextPageImg(){
+        $this->page_imagens += 1;
+        $this->lista_images = evidencia::where('tipo', 2)->take(4 * $this->page_imagens)->get();
+
+        $this->dispatch('postInsert');
+    }
+
+    public function nextPageVids(){
+        $this->page_videos += 1;
+        $this->lista_videos = evidencia::where('tipo', 3)->take(4 * $this->page_videos)->get();
+
+        $this->dispatch('postInsert');
+    }
+
+    public function nextPageAuds(){
+        $this->page_audios += 1;
+        $this->lista_audios = evidencia::where('tipo', 4)->take(3 * $this->page_audios)->get();
+
+        $this->dispatch('postInsert');
+    }
+
+    public function nextPageTxts(){
+        $this->page_textos += 1;
+        $this->lista_textos = evidencia::where('tipo', 5)->take(4 * $this->page_textos)->get();
+
+        $this->dispatch('postInsert');
+    }
+
+    public function nextPageLinks(){
+        $this->page_links += 1;
+        $this->lista_links = evidencia::where('tipo', 6)->take(4 * $this->page_links)->get();
+
+        $this->dispatch('postInsert');
     }
 };
 ?>
@@ -67,12 +130,12 @@ new class extends Component
         </div>
 
     </div>
-    <div class="w-full h-10/12 overflow-y-scroll items-stretch flex gap-4">
-        <div class="w-4/6 flex flex-col gap-4">
+    <div class="w-full h-10/12 overflow-hidden items-stretch flex gap-4">
+        <div class="w-4/6 flex flex-col gap-4 overflow-y-scroll pr-4">
             <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="clock" size="lg" class="w-fit">Adicionados recentemente</flux:badge>
 
-                <div class="grid grid-cols-5 gap-4 w-full ">
+                <div class="grid grid-cols-4 gap-4 w-full ">
                     @foreach ($this->recentes as $recente)
                         <flux:tooltip content="{{ $recente->file_name ? $recente->file_name : ($recente->link ? $recente->link : 'Visualizar') }}">
                             <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden">
@@ -99,22 +162,21 @@ new class extends Component
             @if($this->documentos)
                 <div class="flex flex-col gap-4">
                     <flux:badge rounded icon="document" size="lg" class="w-fit">Documentos</flux:badge>
-                        @foreach ($this->lista_documentos as $documentos)
-                            <div class="grid grid-cols-4 gap-4 w-full ">
-                                @foreach ($documentos as $docs)
-                                <flux:tooltip content="{{ $docs->file_name }}">
-                                    <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
-                                        <flux:icon.document class="size-6"/>
-                                        <flux:heading class="underline truncate">{{$docs->titulo}}</flux:heading>
-                                    </flux:card>
-                                </flux:tooltip>
-                                @endforeach
-                            </div>
-                        @endforeach
 
-                    @if (count($this->lista_documentos) != 1)
+                    <div class="grid grid-cols-4 gap-4 w-full ">
+                        @foreach ($this->lista_documentos as $docs)
+                            <flux:tooltip content="{{ $docs->file_name }}">
+                                <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
+                                    <flux:icon.document class="size-6"/>
+                                    <flux:heading class="underline truncate">{{$docs->titulo}}</flux:heading>
+                                </flux:card>
+                            </flux:tooltip>
+                        @endforeach
+                    </div>
+
+                    @if (count($this->lista_documentos) < $this->count_documentos)
                         <div class="flex w-full justify-center">
-                            <flux:button variant="subtle" icon="plus" size="xs">Mais Documentos</flux:button>
+                            <flux:button variant="subtle" icon="plus" size="xs" wire:click="nextPageDcs()">Mais Documentos</flux:button>
                         </div>
                     @endif
                 </div>
@@ -124,23 +186,19 @@ new class extends Component
             <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="photo" size="lg" class="w-fit">Imagens</flux:badge>
 
-                <div class="flex flex-col gap-4 w-fit ">
-                    @foreach ($this->lista_images as $images)
-                        <div class="flex flex-row items-center gap-4">
-                            @foreach ($images as $img)
-                                <flux:tooltip content="{{ $img->file_name }}">
-                                    <flux:card class="p-0 overflow-hidden">   
-                                        <img src="{{ asset('storage/evidencias/'.$img->file_path) }}" class="max-h-32 border hover:border-2 cursor-pointe">    
-                                        <flux:text class="px-2 py-1 text-center">{{$img->titulo}}</flux:text>
-                                    </flux:card>
-                                </flux:tooltip>
-                            @endforeach
-                        </div>
+                <div class="grid grid-cols-4 gap-4">
+                    @foreach ($this->lista_images as $img)
+                        <flux:tooltip content="{{ $img->file_name }}" class="w-full">
+                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center">   
+                                <img src="{{ asset('storage/evidencias/'.$img->file_path) }}" class="h-32 w-full object-contain bg-black">    
+                                <flux:text class="px-2 py-1 text-center w-full">{{$img->titulo}}</flux:text>
+                            </flux:card>
+                        </flux:tooltip>
                     @endforeach
                 </div>
-                @if (count($this->lista_images) != 1)
+                @if (count($this->lista_images) < $this->count_images)
                     <div class="flex w-full justify-center">
-                        <flux:button variant="subtle" icon="plus" size="xs">Mais Imagens</flux:button>
+                        <flux:button variant="subtle" icon="plus" size="xs" wire:click="nextPageImg()">Mais Imagens</flux:button>
                     </div>
                 @endif
             </div>
@@ -150,23 +208,19 @@ new class extends Component
             <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="video-camera" size="lg" class="w-fit">Vídeos</flux:badge>
         
-                <div class="flex flex-col gap-4 w-fit ">
-                    @foreach ($this->lista_videos as $videos)
-                        <div class="flex flex-row items-center gap-4">
-                            @foreach ($videos as $vids)
-                                <flux:tooltip content="{{ $vids->file_name }}">
-                                    <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer">   
-                                        <video src="{{ asset('storage/evidencias/'.$vids->file_path) }}" controls class="max-h-32"> </video>  
-                                        <flux:text class="px-2 py-1 text-center">{{$vids->titulo}}</flux:text>
-                                    </flux:card> 
-                                </flux:tooltip>
-                            @endforeach
-                        </div>
+                <div class="grid grid-cols-4 gap-4">
+                    @foreach ($this->lista_videos as $vids)
+                        <flux:tooltip content="{{ $vids->file_name }}" class="w-full">
+                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center">    
+                                <video src="{{ asset('storage/evidencias/'.$vids->file_path) }}" controls class="h-32 w-full object-contain bg-black"> </video>  
+                                <flux:text class="px-2 py-1 text-center">{{$vids->titulo}}</flux:text>
+                            </flux:card> 
+                        </flux:tooltip>
                     @endforeach
                 </div>
-                @if (count($this->lista_videos) != 1)
+                @if (count($this->lista_videos) < $this->count_videos)
                     <div class="flex w-full justify-center">
-                        <flux:button variant="subtle" icon="plus" size="xs">Mais Vídeos</flux:button>
+                        <flux:button variant="subtle" icon="plus" size="xs" wire:click="nextPageVids()">Mais Vídeos</flux:button>
                     </div>
                 @endif
             </div>
@@ -177,21 +231,20 @@ new class extends Component
                 <flux:badge rounded icon="speaker-wave" size="lg" class="w-fit">Áudios</flux:badge>
 
                
-                <div class="flex flex-col gap-4 w-fit ">
-                    @foreach ($this->lista_audios as $audios)
-                        <div class="flex flex-row items-center gap-4">
-                            @foreach ($audios as $auds)
-                                <flux:tooltip content="{{ $auds->file_name }}">
-                                    <audio src="{{ asset('storage/evidencias/'.$auds->file_path) }}" controls class="max-w-64 rounded-lg border hover:border-2 cursor-pointer overflow-hidden"> </audio>   
-                                </flux:tooltip>
-                            @endforeach
-                        </div>
+                <div class="grid grid-cols-3 gap-4">
+                    @foreach ($this->lista_audios as $auds)
+                        <flux:tooltip content="{{ $auds->file_name }}" class="w-full">
+                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center">  
+                                <audio src="{{ asset('storage/evidencias/'.$auds->file_path) }}" controls class="w-64"> </audio>   
+                                <flux:text class="px-2 py-1 text-center">{{$auds->titulo}}</flux:text>
+                            </flux:card>
+                        </flux:tooltip>
                     @endforeach
                 </div>
 
-                @if (count($this->lista_audios) != 1)
+                @if (count($this->lista_audios) < $this->count_audios)
                     <div class="flex w-full justify-center">
-                        <flux:button variant="subtle" icon="plus" size="xs">Mais Áudios</flux:button>
+                        <flux:button variant="subtle" icon="plus" size="xs" wire:click="nextPageAuds()">Mais Áudios</flux:button>
                     </div>
                 @endif
             </div>
@@ -201,24 +254,20 @@ new class extends Component
             <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="book-open" size="lg" class="w-fit">Textos</flux:badge>
 
-                <div class="flex flex-col gap-4 ">
-                    @foreach ($this->lista_textos as $textos)
-                        <div class="flex flex-row items-center gap-4 w-full">
-                            @foreach ($textos as $txt)
-                                <flux:tooltip content="visualizar" class="max-w-1/2">
-                                    <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
-                                        <flux:icon.book-open class="size-6"/>
-                                        <flux:heading class="underline truncate">{{$txt->titulo}}</flux:heading>
-                                    </flux:card>
-                                </flux:tooltip>
-                            @endforeach
-                        </div>
+                <div class="grid grid-cols-4 gap-4 w-full ">
+                    @foreach ($this->lista_textos as $txts)
+                        <flux:tooltip content="Visualizar">
+                            <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
+                                <flux:icon.book-open class="size-6"/>
+                                <flux:heading class="underline truncate">{{$txts->titulo}}</flux:heading>
+                            </flux:card>
+                        </flux:tooltip>
                     @endforeach
                 </div>
 
-                @if (count($this->lista_textos) != 1)
+                @if (count($this->lista_textos) < $this->count_textos)
                     <div class="flex w-full justify-center">
-                        <flux:button variant="subtle" icon="plus" size="xs">Mais Textos</flux:button>
+                        <flux:button variant="subtle" icon="plus" size="xs" wire:click="nextPageTxts()">Mais Textos</flux:button>
                     </div>
                 @endif
             </div>
@@ -228,23 +277,20 @@ new class extends Component
             <div class="flex flex-col gap-4">
                 <flux:badge rounded icon="paper-clip" size="lg" class="w-fit">Links</flux:badge>
 
-                <div class="flex flex-col gap-4 ">
-                    @foreach ($this->lista_links as $links)
-                        <div class="flex flex-row items-center gap-4 w-full">
-                            @foreach ($links as $lnk)
-                                <flux:tooltip content="{{$lnk->link}}" class="max-w-1/2">
-                                    <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
-                                        <flux:icon.paper-clip class="size-6"/>
-                                        <flux:heading class="underline truncate">{{$lnk->titulo}}</flux:heading>
-                                    </flux:card>
-                                </flux:tooltip>
-                            @endforeach
-                        </div>
+                <div class="grid grid-cols-4 gap-4 w-full ">
+                    @foreach ($this->lista_links as $link)
+                        <flux:tooltip content="{{ $link->link }}">
+                            <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
+                                <flux:icon.paper-clip class="size-6"/>
+                                <flux:heading class="underline truncate">{{$link->titulo}}</flux:heading>
+                            </flux:card>
+                        </flux:tooltip>
                     @endforeach
                 </div>
-                @if (count($this->lista_links) != 1)
+
+                @if (count($this->lista_links) < $this->count_links)
                     <div class="flex w-full justify-center">
-                        <flux:button variant="subtle" icon="plus" size="xs">Mais Links</flux:button>
+                        <flux:button variant="subtle" icon="plus" size="xs" wire:click="nextPageLinks()">Mais Textos</flux:button>
                     </div>
                 @endif
             </div>
