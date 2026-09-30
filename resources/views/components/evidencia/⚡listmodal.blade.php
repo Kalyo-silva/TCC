@@ -1,7 +1,11 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Reactive;
 use App\Models\evidencia;
+use App\Models\avaliacao_indicador;
+use App\Models\avaliacao_evidencia;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -37,9 +41,17 @@ new class extends Component
 
     public $recentes;
 
+    public $evidencia_id;
+
+    #[Reactive]
+    public $indicador_id;
+    #[Reactive]
+    public $avaliacao_id;
+
     protected $listeners = ['postInsert' => '$refresh'];
 
-    public function mount(){
+    #[On('load_evidencias')]
+    public function loadEvidencias(){
         $this->lista_documentos = evidencia::where('tipo', 1)->take(4 * $this->page_documentos)->get();
         $this->count_documentos = evidencia::where('tipo', 1)->count();
 
@@ -59,6 +71,10 @@ new class extends Component
         $this->count_links = evidencia::where('tipo', 6)->count();
 
         $this->recentes = evidencia::orderBy('created_at', 'desc')->take(4)->get();
+    }
+
+    public function mount(){
+        $this->loadEvidencias();
     }
 
     public function nextPageDcs(){
@@ -102,6 +118,33 @@ new class extends Component
 
         $this->dispatch('postInsert');
     }
+
+    public function setEvidenciaDetails($id){
+        $this->evidencia_id = $id;
+    }
+
+    public function selectEvidencia(){
+        $avaind = avaliacao_indicador::where('avaliacao_id', $this->avaliacao_id)->where('indicador_id', $this->indicador_id)->first();
+
+        if ($avaind->id){
+            $avaevi = new avaliacao_evidencia();
+
+            $avaevi->avaliacao_indicador_id = $avaind->id;
+            $avaevi->evidencia_id = $this->evidencia_id;
+
+            try{
+                if ($avaevi->save()){
+                    Flux::toast(variant : "success", text: 'Evidência anexada com sucesso!');
+                    $this->dispatch('update_avaliacao_evidencia');
+                    $this->evidencia_id = null;
+                    Flux::modal('evidencia_list')->close();
+                }
+            }
+            catch (Throwable $e){  
+                Flux::toast(variant : "danger", heading: 'Falha ao anexar o registro...', text : $e->getMessage());
+            }
+        }
+    }
 };
 ?>
 
@@ -138,7 +181,7 @@ new class extends Component
                 <div class="grid grid-cols-4 gap-4 w-full ">
                     @foreach ($this->recentes as $recente)
                         <flux:tooltip content="{{ $recente->file_name ? $recente->file_name : ($recente->link ? $recente->link : 'Visualizar') }}">
-                            <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden">
+                            <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden" wire:click="setEvidenciaDetails({{$recente->id}})">
                                 @if($recente->tipo == 1)
                                     <flux:icon.document class="size-6"/>
                                 @elseif($recente->tipo == 2)
@@ -166,7 +209,7 @@ new class extends Component
                     <div class="grid grid-cols-4 gap-4 w-full ">
                         @foreach ($this->lista_documentos as $docs)
                             <flux:tooltip content="{{ $docs->file_name }}">
-                                <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
+                                <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2" wire:click="setEvidenciaDetails({{$docs->id}})"> 
                                     <flux:icon.document class="size-6"/>
                                     <flux:heading class="underline truncate">{{$docs->titulo}}</flux:heading>
                                 </flux:card>
@@ -189,7 +232,7 @@ new class extends Component
                 <div class="grid grid-cols-4 gap-4">
                     @foreach ($this->lista_images as $img)
                         <flux:tooltip content="{{ $img->file_name }}" class="w-full">
-                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center">   
+                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center" wire:click="setEvidenciaDetails({{$img->id}})">   
                                 <img src="{{ asset('storage/evidencias/'.$img->file_path) }}" class="h-32 w-full object-contain bg-black">    
                                 <flux:text class="px-2 py-1 text-center w-full">{{$img->titulo}}</flux:text>
                             </flux:card>
@@ -211,7 +254,7 @@ new class extends Component
                 <div class="grid grid-cols-4 gap-4">
                     @foreach ($this->lista_videos as $vids)
                         <flux:tooltip content="{{ $vids->file_name }}" class="w-full">
-                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center">    
+                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center" wire:click="setEvidenciaDetails({{$vids->id}})">    
                                 <video src="{{ asset('storage/evidencias/'.$vids->file_path) }}" controls class="h-32 w-full object-contain bg-black"> </video>  
                                 <flux:text class="px-2 py-1 text-center">{{$vids->titulo}}</flux:text>
                             </flux:card> 
@@ -234,7 +277,7 @@ new class extends Component
                 <div class="grid grid-cols-3 gap-4">
                     @foreach ($this->lista_audios as $auds)
                         <flux:tooltip content="{{ $auds->file_name }}" class="w-full">
-                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center">  
+                            <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center" wire:click="setEvidenciaDetails({{$auds->id}})">  
                                 <audio src="{{ asset('storage/evidencias/'.$auds->file_path) }}" controls class="w-64"> </audio>   
                                 <flux:text class="px-2 py-1 text-center">{{$auds->titulo}}</flux:text>
                             </flux:card>
@@ -257,7 +300,7 @@ new class extends Component
                 <div class="grid grid-cols-4 gap-4 w-full ">
                     @foreach ($this->lista_textos as $txts)
                         <flux:tooltip content="Visualizar">
-                            <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
+                            <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2" wire:click="setEvidenciaDetails({{$txts->id}})"> 
                                 <flux:icon.book-open class="size-6"/>
                                 <flux:heading class="underline truncate">{{$txts->titulo}}</flux:heading>
                             </flux:card>
@@ -280,7 +323,7 @@ new class extends Component
                 <div class="grid grid-cols-4 gap-4 w-full ">
                     @foreach ($this->lista_links as $link)
                         <flux:tooltip content="{{ $link->link }}">
-                            <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2"> 
+                            <flux:card class="h-12 w-full hover:border-2 border rounded-lg cursor-pointer flex justify-start gap-2 items-center overflow-hidden px-4 py-2" wire:click="setEvidenciaDetails({{$link->id}})"> 
                                 <flux:icon.paper-clip class="size-6"/>
                                 <flux:heading class="underline truncate">{{$link->titulo}}</flux:heading>
                             </flux:card>
@@ -297,13 +340,13 @@ new class extends Component
             @endif
 
         </div>
-        <flux:card class="w-2/6">
-
+        <flux:card class="w-2/6 overflow-y-scroll">
+            <livewire:evidencia.details :id="$this->evidencia_id"/>
         </flux:card>
     </div>
     
     <div class="w-full h-1/12 flex flex-row-reverse items-center mt-2">
-        <flux:button size="sm" icon:trailing="paper-airplane" disabled>Selecionar</flux:button>
+        <flux:button size="sm" icon:trailing="paper-airplane" :disabled="!$this->evidencia_id" wire:click="selectEvidencia()">Selecionar</flux:button>
     </div>
     
     <livewire:evidencia.upload/>

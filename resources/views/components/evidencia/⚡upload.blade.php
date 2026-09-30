@@ -99,8 +99,8 @@ new class extends Component
 
             try{
                 if ($evidencia->save()){
-                    $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Evidência cadastrada com sucesso!');
+                    $this->dispatch('load_evidencias');
                     $this->close();
                 }
                 return true;

@@ -8,18 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class avaliacao_evidencia extends Model
 {
     protected $table = 'avaliacao_evidencia';
-    protected $fillable = ['id_avaliacao', 'id_instrumento', 'id_dimensao', 'id_indicador', 'id_evidencia'];
+    protected $fillable = ['avaliacao_indicador_id', 'evidencia_id'];
     
-    public function avaliacao(){
-        return $this->belongsTo(avaliacao::class);
+    public function avaliacao_indicador(){
+        return $this->belongsTo(avaliacao_indicador::class);
     }
-    public function instrumento(){
-        return $this->belongsTo(avaliacao::class);
+    public function evidencia(){
+        return $this->belongsTo(evidencia::class);
     }    
-    public function dimensao(){
-        return $this->belongsTo(dimensao::class);
-    }
-    public function indicador(){
-        return $this->belongsTo(indicador::class);
-    }
 }

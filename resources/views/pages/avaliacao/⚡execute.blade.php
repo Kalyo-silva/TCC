@@ -1,7 +1,10 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Reactive;
 use App\Models\avaliacao;
+use App\Models\avaliacao_indicador;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -15,8 +18,72 @@ new class extends Component
     public $lastIndicador = false;
     public $firstIndicador = true;
 
+    public $nota;
+    public $avaliacao_indicador_id;
+
+    public function saveNota(){
+        if ($this->nota > 5){
+            $this->nota = 5;
+        } 
+        else if ($this->nota < 1){
+            $this->nota = 1;
+        }
+
+        $avaind = avaliacao_indicador::find($this->avaliacao_indicador_id);
+
+        if ($avaind){
+            $avaind->nota = $this->nota;
+
+            try{
+                if ($avaind->save()){
+                    Flux::toast(variant : "success", text: 'Nota atualizada com sucesso!');
+                }
+            }
+            catch (Throwable $e){  
+                Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+            }
+        }
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
+    }
+
+    #[Reactive]
+    private $avaliacao_indicador;
+
+    #[On('update_avaliacao_evidencia')]
+    public function update_avaliacao_evidencia(){
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
+    }
+
     public function mount($id){
         $this->avaliacao = avaliacao::findOrFail($id);
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
+    }
+
+    public function cadastraAvalicaoIndicador($avaliacao_id, $indicador_id){
+         //Valida se existe o avaliacao_indicador na base
+        $avaind = avaliacao_indicador::where('avaliacao_id', $avaliacao_id)->where('indicador_id', $indicador_id)->first();
+
+        if (!$avaind){
+            $avaind = new avaliacao_indicador();
+
+            $avaind->avaliacao_id = $avaliacao_id;
+            $avaind->indicador_id = $indicador_id;
+
+            try{
+                if ($avaind->save()){
+                    Flux::toast(variant : "success", text: 'Avaliação indicador criado com sucesso!');
+                }
+            }
+            catch (Throwable $e){  
+                Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+            }
+        }
+
+        $this->avaliacao_indicador = $avaind;
+        $this->nota = $avaind->nota;
+        $this->avaliacao_indicador_id = $avaind->id;
     }
 
     public function nextDimensao(){
@@ -32,6 +99,8 @@ new class extends Component
         if ($this->dimensao == $this->avaliacao->instrumento->dimensoes->count()-1) {
             $this->lastDimensao = true;
         }
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
     }
     public function previousDimensao(){     
         if ($this->dimensao != 0){  
@@ -46,6 +115,8 @@ new class extends Component
         if ($this->dimensao == 0) {
             $this->firstDimensao = true;
         }
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
     }
 
     public function nextIndicador(){        
@@ -57,6 +128,8 @@ new class extends Component
         if ($this->indicador == $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1) {
             $this->lastIndicador = true;
         }
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
     }
     public function previousIndicador(){     
         if ($this->indicador != 0){  
@@ -67,6 +140,8 @@ new class extends Component
         if ($this->indicador == 0) {
             $this->firstIndicador = true;
         }
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
     }
 };
 ?>
@@ -119,24 +194,56 @@ new class extends Component
         </flux:card>
     </div>
 
-    <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-            <flux:heading>Evidências Anexadas</flux:heading>
-            <flux:modal.trigger name='evidencia_list'>
-                <flux:button icon="paper-clip" size="sm">Anexar</flux:button>
-            </flux:modal.trigger>
+    <div class="w-full flex gap-4">
+        <div class="w-1/8 flex flex-col gap-2 items-center">
+            <flux:heading class="w-full h-8 flex items-center">Nota</flux:heading>
+            <div class="w-full">
+                <flux:input wire:model="nota" type="number" max=5 min=1 wire:change="saveNota()"/>
+            </div>
         </div>
-        
-        <flux:card>
-        </flux:card>
+        <div class="w-7/8 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+                <flux:heading>Evidências Anexadas</flux:heading>
+                <flux:modal.trigger name='evidencia_list'>
+                    <flux:button icon="paper-clip" size="sm">Anexar</flux:button>
+                </flux:modal.trigger>
+            </div>
+            
+            <flux:card class="grid grid-cols-4 gap-4">
+                @if ($this->avaliacao_indicador)
+                    @foreach ($this->avaliacao_indicador->evidencias as $evd)
+                        <flux:tooltip content="{{ $evd->evidencia->file_name ? $evd->evidencia->file_name : ($evd->evidencia->link ? $evd->evidencia->link : 'Visualizar') }}">
+                            <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden">
+                                @if($evd->evidencia->tipo == 1)
+                                    <flux:icon.document class="size-6"/>
+                                @elseif($evd->evidencia->tipo == 2)
+                                    <flux:icon.photo class="size-6"/>
+                                @elseif($evd->evidencia->tipo == 3)
+                                    <flux:icon.video-camera class="size-6"/>
+                                @elseif($evd->evidencia->tipo == 4)
+                                    <flux:icon.speaker-wave class="size-6"/>
+                                @elseif($evd->evidencia->tipo == 5)
+                                    <flux:icon.book-open class="size-6"/>
+                                @elseif($evd->evidencia->tipo == 6)
+                                    <flux:icon.paper-clip class="size-6"/>
+                                @endif
+                                <flux:heading class="underline truncate">{{$evd->evidencia->titulo}}</flux:heading>
+                            </flux:card>
+                        </flux:tooltip>
+                    @endforeach
+                @endif
+            </flux:card>
+        </div>
     </div>
+
     <div class="flex gap-2 flex-row-reverse">
         <flux:button size='sm' :disabled="$this->lastDimensao"   icon:trailing="chevron-double-right" wire:click='nextDimensao()' >Proxíma Dimensão</flux:button>
         <flux:button size='sm' :disabled="$this->lastIndicador"  icon:trailing="arrow-right"          wire:click='nextIndicador()'>Proxímo</flux:button>
         <flux:button size='sm' :disabled="$this->firstIndicador" icon="arrow-left"                    wire:click='previousIndicador()'>Anterior</flux:button>
         <flux:button size='sm' :disabled="$this->firstDimensao"  icon="chevron-double-left"           wire:click='previousDimensao()'>Dimensão Anterior</flux:button>
     </div>
+    
 
 
-    <livewire:evidencia.listmodal />
+    <livewire:evidencia.listmodal :avaliacao_id="$avaliacao->id" :indicador_id="$this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id"/>
 </div>
