@@ -18,14 +18,15 @@ new class extends Component
     public $lastIndicador = false;
     public $firstIndicador = true;
 
+    public $naoAplica = false;
     public $nota;
     public $avaliacao_indicador_id;
 
     public function saveNota(){
-        if ($this->nota > 5){
+        if ($this->nota > 5 && $this->nota != null){
             $this->nota = 5;
         } 
-        else if ($this->nota < 1){
+        else if ($this->nota < 1 && $this->nota != null){
             $this->nota = 1;
         }
 
@@ -42,6 +43,18 @@ new class extends Component
             catch (Throwable $e){  
                 Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
             }
+        }
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
+    }
+
+    public function updatedNaoAplica(){
+        if ($this->naoAplica){
+            $this->nota = null;
+            $this->saveNota();
+        } else{
+            $this->nota = 0;
+            $this->saveNota();
         }
 
         $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
@@ -70,6 +83,7 @@ new class extends Component
 
             $avaind->avaliacao_id = $avaliacao_id;
             $avaind->indicador_id = $indicador_id;
+            $avaind->nota = 0;
 
             try{
                 if ($avaind->save()){
@@ -84,6 +98,12 @@ new class extends Component
         $this->avaliacao_indicador = $avaind;
         $this->nota = $avaind->nota;
         $this->avaliacao_indicador_id = $avaind->id;
+        
+        if ($this->nota === null){
+            $this->naoAplica = True;
+        } else{
+            $this->naoAplica = false;
+        }
     }
 
     public function nextDimensao(){
@@ -146,20 +166,20 @@ new class extends Component
 };
 ?>
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-8 2xl:px-12 2xl:py-8">
     <div class="flex gap-8 justify-between">
         <flux:card class="px-4 py-4 w-full flex gap-4 items-center"> 
             <flux:icon.trophy class="size-8"/>
             <div>
                 <flux:heading size="lg">{{ $this->avaliacao->descricao }}</flux:heading>
-                <flux:text>{{ $this->avaliacao->curso->nome }}</flux:text>
+                <flux:text >{{ $this->avaliacao->curso->nome }}</flux:text>
             </div>
         </flux:card>
-        <flux:card class="px-4 py-4 w-full flex gap-4 items-center">
+        <flux:card class="px-4 py-2 w-full flex gap-4 items-center">
             <flux:icon.clipboard-document-list class="size-8"/>
             <div>
                 <flux:heading size="lg">{{ $this->avaliacao->instrumento->titulo }}</flux:heading>
-                <flux:text>{{ $this->avaliacao->instrumento->ano }}</flux:text>
+                <flux:text >{{ $this->avaliacao->instrumento->ano }}</flux:text>
             </div>
         </flux:card>
     </div>
@@ -193,49 +213,52 @@ new class extends Component
             @endforeach
         </flux:card>
     </div>
-
-    <div class="w-full flex gap-4">
+    
+    <div class="w-full flex flex-row-reverse items-stretch gap-8">
         <div class="w-1/8 flex flex-col gap-2 items-center">
             <flux:heading class="w-full h-8 flex items-center">Nota</flux:heading>
-            <div class="w-full">
-                <flux:input wire:model="nota" type="number" max=5 min=1 wire:change="saveNota()"/>
-            </div>
+            <flux:input wire:model="nota" type="number" max=5 min=1 wire:change="saveNota()" :disabled="$this->naoAplica"/>
         </div>
-        <div class="w-7/8 flex flex-col gap-2">
-            <div class="flex items-center justify-between">
-                <flux:heading>Evidências Anexadas</flux:heading>
-                <flux:modal.trigger name='evidencia_list'>
-                    <flux:button icon="paper-clip" size="sm">Anexar</flux:button>
-                </flux:modal.trigger>
-            </div>
-            
-            <flux:card class="grid grid-cols-4 gap-4">
-                @if ($this->avaliacao_indicador)
-                    @foreach ($this->avaliacao_indicador->evidencias as $evd)
-                        <flux:tooltip content="{{ $evd->evidencia->file_name ? $evd->evidencia->file_name : ($evd->evidencia->link ? $evd->evidencia->link : 'Visualizar') }}">
-                            <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden">
-                                @if($evd->evidencia->tipo == 1)
-                                    <flux:icon.document class="size-6"/>
-                                @elseif($evd->evidencia->tipo == 2)
-                                    <flux:icon.photo class="size-6"/>
-                                @elseif($evd->evidencia->tipo == 3)
-                                    <flux:icon.video-camera class="size-6"/>
-                                @elseif($evd->evidencia->tipo == 4)
-                                    <flux:icon.speaker-wave class="size-6"/>
-                                @elseif($evd->evidencia->tipo == 5)
-                                    <flux:icon.book-open class="size-6"/>
-                                @elseif($evd->evidencia->tipo == 6)
-                                    <flux:icon.paper-clip class="size-6"/>
-                                @endif
-                                <flux:heading class="underline truncate">{{$evd->evidencia->titulo}}</flux:heading>
-                            </flux:card>
-                        </flux:tooltip>
-                    @endforeach
-                @endif
-            </flux:card>
+        <div class="w-fit flex flex-col gap-2 items-center">
+            <flux:heading class="w-full h-8 flex items-center">Situação</flux:heading>
+            <flux:checkbox wire:model.live="naoAplica" class="w-full" label="Não se Aplica"/>
         </div>
     </div>
 
+    <div class="w-full flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+            <flux:heading>Evidências Anexadas</flux:heading>
+            <flux:modal.trigger name='evidencia_list'>
+                <flux:button icon="paper-clip" size="sm">Anexar</flux:button>
+            </flux:modal.trigger>
+        </div>
+        
+        <flux:card class="grid grid-cols-4 gap-4">
+            @if ($this->avaliacao_indicador)
+                @foreach ($this->avaliacao_indicador->evidencias as $evd)
+                    <flux:tooltip content="{{ $evd->evidencia->file_name ? $evd->evidencia->file_name : ($evd->evidencia->link ? $evd->evidencia->link : 'Visualizar') }}">
+                        <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden">
+                            @if($evd->evidencia->tipo == 1)
+                                <flux:icon.document class="size-6"/>
+                            @elseif($evd->evidencia->tipo == 2)
+                                <flux:icon.photo class="size-6"/>
+                            @elseif($evd->evidencia->tipo == 3)
+                                <flux:icon.video-camera class="size-6"/>
+                            @elseif($evd->evidencia->tipo == 4)
+                                <flux:icon.speaker-wave class="size-6"/>
+                            @elseif($evd->evidencia->tipo == 5)
+                                <flux:icon.book-open class="size-6"/>
+                            @elseif($evd->evidencia->tipo == 6)
+                                <flux:icon.paper-clip class="size-6"/>
+                            @endif
+                            <flux:heading class="underline truncate">{{$evd->evidencia->titulo}}</flux:heading>
+                        </flux:card>
+                    </flux:tooltip>
+                @endforeach
+            @endif
+        </flux:card>
+    </div>
+    
     <div class="flex gap-2 flex-row-reverse">
         <flux:button size='sm' :disabled="$this->lastDimensao"   icon:trailing="chevron-double-right" wire:click='nextDimensao()' >Proxíma Dimensão</flux:button>
         <flux:button size='sm' :disabled="$this->lastIndicador"  icon:trailing="arrow-right"          wire:click='nextIndicador()'>Proxímo</flux:button>
