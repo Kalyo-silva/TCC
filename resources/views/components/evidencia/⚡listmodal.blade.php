@@ -48,27 +48,58 @@ new class extends Component
     #[Reactive]
     public $avaliacao_id;
 
+    public $search = '';
+    
+    #[On('search')]
+    public function getSearch(string $s){
+        $this->search = $s;
+
+        $this->loadEvidencias();
+    }
+
+
     protected $listeners = ['postInsert' => '$refresh'];
 
     #[On('load_evidencias')]
     public function loadEvidencias(){
-        $this->lista_documentos = evidencia::where('tipo', 1)->take(4 * $this->page_documentos)->get();
-        $this->count_documentos = evidencia::where('tipo', 1)->count();
 
-        $this->lista_images = evidencia::where('tipo', 2)->take(4 * $this->page_imagens)->get();
-        $this->count_images = evidencia::where('tipo', 2)->count();
+        $this->lista_documentos = evidencia::where('tipo', 1)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_documentos)->get();
+        $this->count_documentos = evidencia::where('tipo', 1)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->count();
 
-        $this->lista_videos = evidencia::where('tipo', 3)->take(4 * $this->page_videos)->get();
-        $this->count_videos = evidencia::where('tipo', 3)->count();
+        $this->lista_images = evidencia::where('tipo', 2)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_imagens)->get();
+        $this->count_images = evidencia::where('tipo', 2)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->count();
 
-        $this->lista_audios = evidencia::where('tipo', 4)->take(3 * $this->page_audios)->get();
-        $this->count_audios = evidencia::where('tipo', 4)->count();
+        $this->lista_videos = evidencia::where('tipo', 3)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_videos)->get();
+        $this->count_videos = evidencia::where('tipo', 3)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->count();
 
-        $this->lista_textos = evidencia::where('tipo', 5)->take(4 * $this->page_textos)->get();
-        $this->count_textos = evidencia::where('tipo', 5)->count();
+        $this->lista_audios = evidencia::where('tipo', 4)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(3 * $this->page_audios)->get();
+        $this->count_audios = evidencia::where('tipo', 4)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->count();
 
-        $this->lista_links = evidencia::where('tipo', 6)->take(4 * $this->page_links)->get();
-        $this->count_links = evidencia::where('tipo', 6)->count();
+        $this->lista_textos = evidencia::where('tipo', 5)->where('titulo', 'ilike', '%'.$this->search.'%')->take(4 * $this->page_textos)->get();
+        $this->count_textos = evidencia::where('tipo', 5)->where('titulo', 'ilike', '%'.$this->search.'%')->count();
+
+        $this->lista_links = evidencia::where('tipo', 6)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('link', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_links)->get();
+        $this->count_links = evidencia::where('tipo', 6)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('link', 'ilike', '%'.$this->search.'%');
+        })->count();
 
         $this->recentes = evidencia::orderBy('created_at', 'desc')->take(4)->get();
     }
@@ -79,44 +110,45 @@ new class extends Component
 
     public function nextPageDcs(){
         $this->page_documentos += 1;
-        $this->lista_documentos = evidencia::where('tipo', 1)->take(4 * $this->page_documentos)->get();
-
-        $this->dispatch('postInsert');
+        $this->lista_documentos = evidencia::where('tipo', 1)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_documentos)->get();
     }
 
     public function nextPageImg(){
-        $this->page_imagens += 1;
-        $this->lista_images = evidencia::where('tipo', 2)->take(4 * $this->page_imagens)->get();
+        $this->dispatch('search', s : $this->search);
 
-        $this->dispatch('postInsert');
+        $this->page_imagens += 1;
+        $this->lista_images = evidencia::where('tipo', 2)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_imagens)->get();
+        
     }
 
     public function nextPageVids(){
         $this->page_videos += 1;
-        $this->lista_videos = evidencia::where('tipo', 3)->take(4 * $this->page_videos)->get();
-
-        $this->dispatch('postInsert');
+        $this->lista_videos = evidencia::where('tipo', 3)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_videos)->get();
     }
 
     public function nextPageAuds(){
         $this->page_audios += 1;
-        $this->lista_audios = evidencia::where('tipo', 4)->take(3 * $this->page_audios)->get();
-
-        $this->dispatch('postInsert');
+        $this->lista_audios = evidencia::where('tipo', 4)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('file_name', 'ilike', '%'.$this->search.'%');
+        })->take(3 * $this->page_audios)->get();
     }
 
     public function nextPageTxts(){
         $this->page_textos += 1;
-        $this->lista_textos = evidencia::where('tipo', 5)->take(4 * $this->page_textos)->get();
-
-        $this->dispatch('postInsert');
+        $this->lista_textos = evidencia::where('tipo', 5)->where('titulo', 'ilike', '%'.$this->search.'%')->take(4 * $this->page_textos)->get();
     }
 
     public function nextPageLinks(){
         $this->page_links += 1;
-        $this->lista_links = evidencia::where('tipo', 6)->take(4 * $this->page_links)->get();
-
-        $this->dispatch('postInsert');
+        $this->lista_links = evidencia::where('tipo', 6)->where(function ($query){
+            $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('link', 'ilike', '%'.$this->search.'%');
+        })->take(4 * $this->page_links)->get();
     }
 
     public function setEvidenciaDetails($id){
@@ -171,36 +203,37 @@ new class extends Component
         <div>
             <flux:input size="sm"  placeholder="Pesquise evidências..." onchange="Livewire.dispatch('search', {s : this.value})" icon="magnifying-glass"/>
         </div>
-
     </div>
     <div class="w-full h-10/12 overflow-hidden items-stretch flex gap-4">
         <div class="w-4/6 flex flex-col gap-4 overflow-y-scroll pr-4">
-            <div class="flex flex-col gap-4">
-                <flux:badge rounded icon="clock" size="lg" class="w-fit">Adicionados recentemente</flux:badge>
+            @if (!$this->search)
+                <div class="flex flex-col gap-4">
+                    <flux:badge rounded icon="clock" size="lg" class="w-fit">Adicionados recentemente</flux:badge>
 
-                <div class="grid grid-cols-4 gap-4 w-full ">
-                    @foreach ($this->recentes as $recente)
-                        <flux:tooltip content="{{ $recente->file_name ? $recente->file_name : ($recente->link ? $recente->link : 'Visualizar') }}">
-                            <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden" wire:click="setEvidenciaDetails({{$recente->id}})">
-                                @if($recente->tipo == 1)
-                                    <flux:icon.document class="size-6"/>
-                                @elseif($recente->tipo == 2)
-                                    <flux:icon.photo class="size-6"/>
-                                @elseif($recente->tipo == 3)
-                                    <flux:icon.video-camera class="size-6"/>
-                                @elseif($recente->tipo == 4)
-                                    <flux:icon.speaker-wave class="size-6"/>
-                                @elseif($recente->tipo == 5)
-                                    <flux:icon.book-open class="size-6"/>
-                                @elseif($recente->tipo == 6)
-                                    <flux:icon.paper-clip class="size-6"/>
-                                @endif
-                                <flux:heading class="underline truncate">{{$recente->titulo}}</flux:heading>
-                            </flux:card>
-                        </flux:tooltip>
-                    @endforeach
+                    <div class="grid grid-cols-4 gap-4 w-full ">
+                        @foreach ($this->recentes as $recente)
+                            <flux:tooltip content="{{ $recente->file_name ? $recente->file_name : ($recente->link ? $recente->link : 'Visualizar') }}">
+                                <flux:card class="h-12 w-full flex justify-start items-center gap-2 px-4 py-2 cursor-pointer hover:border-2 overflow-hidden" wire:click="setEvidenciaDetails({{$recente->id}})">
+                                    @if($recente->tipo == 1)
+                                        <flux:icon.document class="size-6"/>
+                                    @elseif($recente->tipo == 2)
+                                        <flux:icon.photo class="size-6"/>
+                                    @elseif($recente->tipo == 3)
+                                        <flux:icon.video-camera class="size-6"/>
+                                    @elseif($recente->tipo == 4)
+                                        <flux:icon.speaker-wave class="size-6"/>
+                                    @elseif($recente->tipo == 5)
+                                        <flux:icon.book-open class="size-6"/>
+                                    @elseif($recente->tipo == 6)
+                                        <flux:icon.paper-clip class="size-6"/>
+                                    @endif
+                                    <flux:heading class="underline truncate">{{$recente->titulo}}</flux:heading>
+                                </flux:card>
+                            </flux:tooltip>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
 
             @if($this->documentos)
                 <div class="flex flex-col gap-4">

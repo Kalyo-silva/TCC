@@ -3,6 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\avaliacao;
+use App\Models\avaliacao_corpodocente;
 
 new class extends Component
 {
@@ -47,6 +48,7 @@ new class extends Component
         $this->dispatch('AvaliacaoDetail', id : $id);
     }
 
+
     public function executeAvaliacao(){
         if ($this->situacao == 0){
 
@@ -56,6 +58,50 @@ new class extends Component
             
                 if ($avaliacao->save()){
                     $this->dispatch('postInsert');
+                }
+            }
+
+            // Caso for iniciar a avaliação, cadastra o histórico do corpo docente
+        
+            // Cadastra o cordenador primeiro
+            $coordenador = new avaliacao_corpodocente();
+            
+            $coordenador->avaliacao_id = $avaliacao->id;
+            $coordenador->curso_id = $avaliacao->curso->id;
+            $coordenador->professor_id = $avaliacao->curso->coordenador_id;
+            $coordenador->coordenador = 1;
+            
+            try{
+                $coordenador->save();
+            }
+            catch (Throwable $e){
+                if ($e->getCode() == 23505){ 
+                    Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text: "Este nome já está cadastrado no sistema.");
+                }
+                else{   
+                    Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text : $e->getMessage());
+                }
+            }
+
+            // Cadastra o restante do corpo docente
+            foreach ($avaliacao->curso->professores as $prof) {
+                $professor = new avaliacao_corpodocente();
+                
+                $professor->avaliacao_id = $avaliacao->id;
+                $professor->curso_id = $avaliacao->curso_id;
+                $professor->professor_id = $prof->id;
+                $professor->coordenador = 0;
+                
+                try{
+                    $professor->save();
+                }
+                catch (Throwable $e){
+                    if ($e->getCode() == 23505){ 
+                        Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text: "Este nome já está cadastrado no sistema.");
+                    }
+                    else{   
+                        Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text : $e->getMessage());
+                    }
                 }
             }
         }
@@ -109,7 +155,9 @@ new class extends Component
                 <flux:modal.trigger name="edit"> 
                     <flux:button type="submit" class="mt-4" icon="pencil-square" wire:click="select({{ $this->id }})">Editar</flux:button> 
                 </flux:modal.trigger>
-                <flux:button class="mt-4" icon="eye" wire:click="select({{ $this->id }})">Visualizar</flux:button> 
+                <flux:modal.trigger name="view_professores">
+                    <flux:button class="mt-4" icon="user" :disabled="$this->situacao == 0">Docentes</flux:button> 
+                </flux:modal.trigger>
                 @if ($this->id)
                     @if ($this->situacao == 0)
                         <flux:button type="submit" class="mt-4" icon="play" wire:click="executeAvaliacao()">Executar</flux:button> 
@@ -117,10 +165,12 @@ new class extends Component
                         <flux:button type="submit" class="mt-4" icon="play" wire:click="executeAvaliacao()">Continuar</flux:button> 
                     @else
                         <flux:tooltip content="Avaliação já concluida.">
-                            <flux:button disabled class="mt-4" icon="play">Executar</flux:button> 
+                            <flux:button class="mt-4" icon="eye" wire:click="executeAvaliacao()">Visualizar</flux:button> 
                         </flux:tooltip>
                     @endif
                 @endif
             </div>
         </div>
+
+        <livewire:avaliacao.list_professores :avaliacao_id="$this->id"/>
 </flux:modal>

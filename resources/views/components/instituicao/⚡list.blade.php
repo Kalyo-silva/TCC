@@ -33,7 +33,7 @@ new class extends Component
     <div class="grid grid-cols-3 items-center gap-4 mt-8 mb-8">
         @foreach ($this->instituicoes() as $inst)
             <flux:modal.trigger name="details">
-                <flux:card wire:click='' class="cursor-pointer" wire:click='select({{ $inst->id }})'>
+                <flux:card class="cursor-pointer" wire:click='select({{ $inst->id }})'>
                     <div class="flex items-start gap-4">
                         <flux:card class="size-21 rounded-lg overflow-hidden p-0 flex items-center justify-center">
                             @if ($inst->logo)

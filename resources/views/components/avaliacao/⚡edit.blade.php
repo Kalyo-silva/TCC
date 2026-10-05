@@ -16,6 +16,7 @@ new class extends Component
     public $ano;
     public $data_inicio;
     public $data_fim;
+    public $situacao;
 
     #[On('AvaliacaoDetail')]
     public function getIdInstrumento($id){
@@ -31,6 +32,7 @@ new class extends Component
             $this->ano            = $avaliacao->ano            ; 
             $this->data_inicio    = $avaliacao->data_inicio    ; 
             $this->data_fim       = $avaliacao->data_fim       ; 
+            $this->situacao       = $avaliacao->situacao       ;
         }
     } 
 
@@ -99,7 +101,7 @@ new class extends Component
             </div>
             <flux:input.group label="Curso">
                 <flux:button icon='book-open'/>
-                <flux:select wire:model='curso_id'>
+                <flux:select wire:model='curso_id' :disabled="$this->situacao == 2">
                         <flux:select.option value="dummy">Selecione...</flux:select.option>
                     @foreach ($this->cursos() as $cur)
                         <flux:select.option value="{{ $cur->id }}">{{ $cur->nome }}</flux:select.option>
@@ -108,7 +110,7 @@ new class extends Component
             </flux:input.group>
             <flux:input.group label="Instrumento de Avaliação">
                 <flux:button icon='clipboard-document-list'/>
-                <flux:select wire:model='instrumento_id'>
+                <flux:select wire:model='instrumento_id' :disabled="$this->situacao == 2">
                         <flux:select.option value="dummy">Selecione...</flux:select.option>
                     @foreach ($this->instrumentos() as $inst)
                         <flux:select.option value="{{ $inst->id }}">{{ $inst->titulo }}</flux:select.option>
