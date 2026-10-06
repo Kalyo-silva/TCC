@@ -14,4 +14,8 @@ class instrumento extends Model
     public function dimensoes(): hasMany{
         return $this->hasMany(dimensao::class);
     }
+
+    public function avaliacoes(): hasMany{
+        return $this->hasMany(avaliacao::class);
+    }
 }

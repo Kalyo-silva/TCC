@@ -10,14 +10,14 @@ class avaliacao_indicador extends Model
 {
     protected $table = 'avaliacao_indicador';
 
-    protected $fillable = ['avaliacao_id', 'indicador_id', 'nota'];
+    protected $fillable = ['avaliacao_id', 'indicador_id', 'nota', 'observacao'];
 
     public function avaliacao(): belongsTo{
         return $this->belongsTo(avaliacao::class);
     }
 
     public function indicador(): belongsTo{
-        return $this->belongsTo(indicador::class);
+        return $this->belongsTo(indicador::class, 'indicador_id', 'id');
     }
 
     public function evidencias(): HasMany{

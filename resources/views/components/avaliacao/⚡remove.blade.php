@@ -10,7 +10,7 @@ new class extends Component
     public $id;
 
     #[On('AvaliacaoDetail')]
-    public function getIdCurso($id){
+    public function getIdAvaliacao($id){
         $this->id = $id;
     }
 

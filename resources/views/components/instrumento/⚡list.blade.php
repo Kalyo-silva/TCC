@@ -37,7 +37,10 @@ new class extends Component
         <flux:card class="flex items-center justify-between">
             <div class="flex items-start flex-col gap-2">
                 <flux:heading size="lg">{{ $inst->titulo }}</flux:heading>
-                <flux:text>{{ $inst->ano }} | 0 Avaliações Realizadas</flux:text>
+                <div class="flex gap-2 items-center">
+                    <flux:badge size="sm">{{ $inst->ano }}</flux:badge>
+                    <flux:text>{{ $inst->avaliacoes->count() }} {{$inst->avaliacoes->count() == 1 ? "Avaliação" : "Avaliações"}} Realizadas</flux:text>
+                </div>
             </div>
             <div class="flex gap-2">
                 <flux:modal.trigger name="remove">

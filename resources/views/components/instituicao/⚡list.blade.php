@@ -37,7 +37,7 @@ new class extends Component
                     <div class="flex items-start gap-4">
                         <flux:card class="size-21 rounded-lg overflow-hidden p-0 flex items-center justify-center">
                             @if ($inst->logo)
-                                <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="pfp" class="size-21">
+                                <img src="{{asset('storage/img_instituicoes/'.$inst->logo)}}" alt="pfp" class="size-21 object-cover">
                             @else
                                 <flux:icon.camera class="size-12"/>
                             @endif

@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('avaliacao_id')->constrained('avaliacoes');
             $table->foreignId('indicador_id')->constrained('indicadores');
             $table->smallInteger('nota')->nullable();
-
+            $table->text('observacao')->nullable();
+            
             $table->unique(['avaliacao_id', 'indicador_id']);
 
             $table->timestamps();

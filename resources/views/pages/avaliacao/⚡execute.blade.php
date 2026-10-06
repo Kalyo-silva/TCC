@@ -19,7 +19,22 @@ new class extends Component
     public $firstIndicador = true;
 
     public $naoAplica = false;
+    public $avaliacao_indicador_id;
     public $nota;
+    public $observacoes;
+
+    public function mount($id){
+        $this->avaliacao = avaliacao::findOrFail($id);
+
+        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
+
+        if ($this->dimensao == $this->avaliacao->instrumento->dimensoes->count()-1) {
+            $this->lastDimensao = true;
+        }
+        if ($this->indicador == $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1) {
+            $this->lastIndicador = true;
+        }
+    }
 
     public function saveNota(){
         if ($this->nota > 5 && $this->nota != null){
@@ -47,6 +62,23 @@ new class extends Component
         $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
     }
 
+    public function saveObservacao(){
+        $avaind = avaliacao_indicador::find($this->avaliacao_indicador_id);
+
+        if ($avaind){
+            $avaind->observacao = $this->observacoes;
+
+            try{
+                if ($avaind->save()){
+                    Flux::toast(variant : "success", text: 'Observações atualizada com sucesso!');
+                }
+            }
+            catch (Throwable $e){  
+                Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+            }
+        }
+    }
+
     public function updatedNaoAplica(){
         if ($this->naoAplica){
             $this->nota = null;
@@ -66,21 +98,16 @@ new class extends Component
         $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
     }
 
-    public function mount($id){
-        $this->avaliacao = avaliacao::findOrFail($id);
-
-        $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
-    }
-
     public function cadastraAvalicaoIndicador($avaliacao_id, $indicador_id){
          //Valida se existe o avaliacao_indicador na base
         $avaind = avaliacao_indicador::where('avaliacao_id', $avaliacao_id)->where('indicador_id', $indicador_id)->first();
 
-        if (!$avaind){
+        if (!$avaind && $this->avaliacao->situacao != 2){
             $avaind = new avaliacao_indicador();
 
             $avaind->avaliacao_id = $avaliacao_id;
             $avaind->indicador_id = $indicador_id;
+            $avaind->observacao = null;
             $avaind->nota = 0;
 
             try{
@@ -93,14 +120,22 @@ new class extends Component
             }
         }
 
-        $this->avaliacao_indicador = $avaind;
-        $this->nota = $avaind->nota;
-        $this->avaliacao_indicador_id = $avaind->id;
-        
-        if ($this->nota === null){
-            $this->naoAplica = True;
-        } else{
-            $this->naoAplica = false;
+        if ($avaind){
+            $this->avaliacao_indicador = $avaind;
+            $this->nota = $avaind->nota;
+            $this->observacoes = $avaind->observacao;
+            $this->avaliacao_indicador_id = $avaind->id;
+            
+            if ($this->nota === null){
+                $this->naoAplica = True;
+            } else{
+                $this->naoAplica = false;
+            }
+        }
+        else{
+            $this->nota = null;
+            $this->avaliacao_indicador_id = null;
+            $this->avaliacao_indicador = null;
         }
     }
 
@@ -112,6 +147,10 @@ new class extends Component
 
             $this->lastIndicador = false;
             $this->firstIndicador = true;
+
+            if ($this->indicador == $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1) {
+                $this->lastIndicador = true;
+            }
         }
 
         if ($this->dimensao == $this->avaliacao->instrumento->dimensoes->count()-1) {
@@ -128,6 +167,10 @@ new class extends Component
 
             $this->lastIndicador = false;
             $this->firstIndicador = true;
+
+            if ($this->indicador == $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores->count() -1) {
+                $this->lastIndicador = true;
+            }
         }
         
         if ($this->dimensao == 0) {
@@ -160,30 +203,6 @@ new class extends Component
         }
 
         $this->cadastraAvalicaoIndicador($this->avaliacao->id, $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores[$this->indicador]->id);
-    }
-
-    public function concluir(){
-        $avaind_invalido = avaliacao_indicador::where('avaliacao_id', $this->avaliacao->id)->where('nota', 0)->first();
-
-        if ($avaind_invalido){
-            Flux::toast(variant : "danger", heading: 'Não é possivel concluir a avaliação...', text : 'Existem um ou mais indicadores com notas inválidas. Por favor, revise os indicadores e tente novamente.');
-        }
-        else{
-            if ($this->avaliacao){
-                $this->avaliacao->situacao = 2;
-
-                try{
-                    if ($this->avaliacao->save()){
-                        Flux::toast(variant : "success", text: 'Avaliação concluida com sucesso!');
-                    }
-                }
-                catch (Throwable $e){  
-                    Flux::toast(variant : "danger", heading: 'Falha ao concluir a avaliação...', text : $e->getMessage());
-                }
-                
-                return to_route('avaliacao');
-            }
-        }
     }
 
     public function selectEvidencia($id){
@@ -247,18 +266,24 @@ new class extends Component
 
     @if ($this->avaliacao->situacao != 2)
         <div class="w-full flex flex-row-reverse items-stretch gap-8">
-            <div class="w-1/8 flex flex-col gap-2 items-center">
-                <flux:heading class="w-full h-8 flex items-center">Nota</flux:heading>
-                <flux:input wire:model="nota" type="number" max=5 min=1 wire:change="saveNota()" :disabled="$this->naoAplica"/>
+            <div class="w-full flex flex-col gap-2 items-center">
+                <flux:heading class="w-full h-8 flex items-center">Observações</flux:heading>
+                <flux:textarea wire:model="observacoes" wire:change="saveObservacao()"></flux:textarea>
             </div>
             <div class="w-fit flex flex-col gap-2 items-center">
+                <flux:heading class="w-full h-8 flex items-center">Nota</flux:heading>
+                <flux:input wire:model="nota" type="number" max=5 min=1 wire:change="saveNota()" :disabled="$this->naoAplica"/>
                 <flux:heading class="w-full h-8 flex items-center">Situação</flux:heading>
-                <flux:checkbox wire:model.live="naoAplica" class="w-full" label="Não se Aplica"/>
+                <flux:checkbox wire:model.live="naoAplica" class="w-full" label="N/A"/>
             </div>
         </div>
     @else
-        <div class="w-full flex flex-row-reverse items-stretch gap-8">
-            <div class="w-1/8 flex flex-col gap-2 items-center">
+        <div class="w-full flex flex-row-reverse items-stretch justify-baseline gap-8">
+            <div class="w-full flex flex-col gap-2 items-center">
+                <flux:heading class="w-full h-8 flex items-center">Observações</flux:heading>
+                <flux:textarea wire:model="observacoes" disabled></flux:textarea>
+            </div>
+            <div class="w-fit flex flex-col gap-2 items-center">
                 <flux:heading class="w-full h-8 flex items-center">Nota</flux:heading>
                 <flux:input value="{{ $this->nota !== Null ? $this->nota : 'N/A' }}" type="text" max=5 min=1 :disabled="true"/>
             </div>
@@ -307,15 +332,10 @@ new class extends Component
     </div>
     
     <div class="flex gap-2 flex-row-reverse">
-        @if ($this->lastDimensao && $this->lastIndicador && $this->avaliacao->situacao != 2)
-            <flux:button size='sm' icon="check-circle" wire:click='concluir()' class="ml-8">Concluir Avaliação</flux:button>
-        @endif
-
         <flux:button size='sm' :disabled="$this->lastDimensao"   icon:trailing="chevron-double-right" wire:click='nextDimensao()' >Proxíma Dimensão</flux:button>
         <flux:button size='sm' :disabled="$this->lastIndicador"  icon:trailing="arrow-right"          wire:click='nextIndicador()'>Proxímo</flux:button>
         <flux:button size='sm' :disabled="$this->firstIndicador" icon="arrow-left"                    wire:click='previousIndicador()'>Anterior</flux:button>
         <flux:button size='sm' :disabled="$this->firstDimensao"  icon="chevron-double-left"           wire:click='previousDimensao()'>Dimensão Anterior</flux:button>
-
     </div>
     
 
