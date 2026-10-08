@@ -49,13 +49,13 @@ new class extends Component
         <flux:heading size="">Novo Professor</flux:heading>
     </div>
     <form wire:submit='save' class="flex flex-col gap-4 mt-4">
-        <flux:input placeholder="Nome..." wire:model='nome'/>
+        <flux:input placeholder="Nome..." label="Nome" wire:model='nome'/>
         <div class="flex gap-4">
             <div class="w-5/10">
-                <flux:input type="date" placeholder="Data de Admissao..." wire:model="data_admissao"/>
+                <flux:input type="date" label="Data de Admissão" placeholder="Data de Admissao..." wire:model="data_admissao"/>
             </div>
             <div class="w-5/10">
-                <flux:select wire:model="titulacao" placeholder="Titulação...">
+                <flux:select wire:model="titulacao" placeholder="Titulação..." label="Titulação">
                     <flux:select.option value="Graduado">Graduado</flux:select.option>
                     <flux:select.option value="Especialista">Especialista</flux:select.option>
                     <flux:select.option value="Mestre">Mestre</flux:select.option>
@@ -63,20 +63,24 @@ new class extends Component
                 </flux:select>
             </div>
         </div>
-            <div class="flex gap-4">
-                <flux:select wire:model="regime">
+        <div class="flex gap-4">
+            <div class="w-5/10">
+                <flux:select wire:model="regime" label="Regime">
                     <flux:select.option value="Parcial">Parcial</flux:select.option>
                     <flux:select.option value="Integral">Integral</flux:select.option>
                     <flux:select.option value="Horista">Horista</flux:select.option>
                 </flux:select>
+            </div>
 
-                <flux:select wire:model="vinculo">
+            <div class="w-5/10">
+                <flux:select wire:model="vinculo" label="Vínculo">
                     <flux:select.option value="CLT">CLT</flux:select.option>
                     <flux:select.option value="Estatuário">Estatuário</flux:select.option>
                     <flux:select.option value="Outros">Outros</flux:select.option>
                 </flux:select>
             </div>
-        <flux:input icon="link" placeholder="Curriculum Lattes..." wire:model="lattes"/>
+        </div>
+        <flux:input label="Curriculum Lattes" icon="link" placeholder="Curriculum Lattes..." wire:model="lattes"/>
         <flux:button type="submit" class="mt-4" variant="primary">Salvar</flux:button>
     </form>
 </flux:modal>

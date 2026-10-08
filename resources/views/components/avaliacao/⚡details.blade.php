@@ -217,7 +217,7 @@ new class extends Component
             </flux:card>
         </div>
     </div>
-    <div class="grid {{ $this->situacao == 1 ? 'grid-cols-5' : 'grid-cols-4' }} gap-4">
+    <div class="grid {{ $this->situacao == 1 ? 'grid-cols-5' : 'grid-cols-4' }} gap-4  mt-4">
         <flux:modal.trigger name="remove"> 
             <flux:button type="submit" class="mt-4" icon="trash" wire:click='select({{ $this->id }})'>Remover</flux:button> 
         </flux:modal.trigger>

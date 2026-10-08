@@ -75,7 +75,7 @@ new class extends Component
         <flux:heading size="">Editar Curso</flux:heading>
     </div>
         <form wire:submit='save' class="flex flex-col gap-4 mt-4">
-            <flux:input placeholder="Nome..." wire:model='nome'/>
+            <flux:input label="Nome" placeholder="Nome..." wire:model='nome'/>
             <div class="flex gap-4">
                 <div class="w-1/2">
                     <flux:input.group label="Instituição">
