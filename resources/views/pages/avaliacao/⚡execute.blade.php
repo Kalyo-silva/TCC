@@ -217,9 +217,6 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-8 2xl:px-12 2xl:py-8">
-    {{ $this->indicador }}
-    {{ $this->avaliacao->instrumento->dimensoes[$this->dimensao]->indicadores }}
-
     <div class="flex gap-8 justify-between">
         <flux:card class="px-4 py-4 w-full flex gap-4 items-center"> 
             <flux:icon.trophy class="size-8"/>
