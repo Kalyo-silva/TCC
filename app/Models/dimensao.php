@@ -15,6 +15,6 @@ class dimensao extends Model
         return $this->belongsTo(instrumento::class);
     }
     public function indicadores(): hasMany{
-        return $this->hasMany(indicador::class);
+        return $this->hasMany(indicador::class)->orderby('sequencia');
     }
 }

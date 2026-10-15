@@ -23,6 +23,8 @@ new class extends Component
     public $usuarioNome;
     public $tituloInstrumento;
     public $nomeCurso;
+    public $mantenedor;
+    public $instituicao;
 
     public $avaliacao_indicador;
 
@@ -55,6 +57,8 @@ new class extends Component
             $this->usuarioNome     = $this->avaliacao->usuario->name     ;
             $this->tituloInstrumento = $this->avaliacao->instrumento->titulo;
             $this->nomeCurso = $this->avaliacao->curso->nome;
+            $this->mantenedor = $this->avaliacao->curso->instituicao->mantenedor->nome;
+            $this->instituicao = $this->avaliacao->curso->instituicao->nome;
         }
 
         $this->getMedias();
@@ -132,7 +136,7 @@ new class extends Component
                     
                     $professor->avaliacao_id = $avaliacao->id;
                     $professor->curso_id = $avaliacao->curso_id;
-                    $professor->professor_id = $prof->id;
+                    $professor->professor_id = $prof->professor_id;
                     $professor->coordenador = 0;
                     
                     try{
@@ -154,12 +158,12 @@ new class extends Component
     }
 }
 ?>
-
 <flux:modal name="details" class="min-w-3/4 2xl:min-w-1/2">
     <div class="flex items-center gap-4">
         <flux:icon.plus/>
         <flux:heading size="">Detalhes da Avaliação</flux:heading>
     </div>
+
     <div class="flex gap-4 w-full">
         <div class="flex flex-col gap-4 mt-4 w-4/6">
             <div class="flex gap-4">
@@ -168,6 +172,21 @@ new class extends Component
                 </div>
                 <div class="w-2/10">
                     <flux:input label="Ano" wire:model='ano' readonly/>
+                </div>
+            </div>
+
+            <div class="w-full gap-4 flex items-center">
+                <div class="w-1/2">
+                    <flux:input.group label="Mantenedor">
+                        <flux:button icon='building-library'/>
+                        <flux:input wire:model='mantenedor' readonly/>
+                    </flux:input.group>
+                </div>
+                <div class="w-1/2">
+                    <flux:input.group label="Instituição">
+                        <flux:button icon='academic-cap'/>
+                        <flux:input wire:model='instituicao' readonly/>
+                    </flux:input.group>
                 </div>
             </div>
 

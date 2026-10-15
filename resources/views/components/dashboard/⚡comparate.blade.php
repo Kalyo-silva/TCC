@@ -77,7 +77,7 @@ new class extends Component
 ?>
 
 <div class="flex flex-col gap-4 h-full">
-    @if ($this->mantenedores)
+    @if ($this->mantenedores && $this->mantenedores->count() != 0)
         <div class="flex gap-4 items-center">
             <div class="flex flex-col gap-2 w-full">
                 <flux:heading>Mantenedor</flux:heading>

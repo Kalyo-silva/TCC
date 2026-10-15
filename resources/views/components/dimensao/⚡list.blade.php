@@ -10,6 +10,7 @@ new class extends Component
     protected $listeners = ['postInsert' => '$refresh'];
     
     public $instrumento_id;
+    public $listOpen = [];
 
     public function dimensoes(){
         return dimensao::where('instrumento_id', $this->instrumento_id)->orderBy('sequencia')->get();
@@ -65,6 +66,15 @@ new class extends Component
         }
 
     }
+
+    public function abrir($id){
+        if (!array_key_exists($id, $this->listOpen)){
+            $this->listOpen[$id] = True;
+        }
+        else {
+            $this->listOpen[$id] = !$this->listOpen[$id];
+        }
+    }
 };
 ?>
 
@@ -72,9 +82,17 @@ new class extends Component
     @foreach ($this->dimensoes() as $dim)
         <flux:card class="px-4 py-2">
             <div class="flex justify-between gap-4 items-center py-2">  
-                <div class="flex gap-2 item-center">
+                <div class="flex gap-2 item-center w-full cursor-pointer" wire:click="abrir({{ $dim->id }})">
                     <flux:icon.cube class="size-5"/>
-                    <flux:text>{{ $dim->sequencia }}. {{  $dim->descricao  }}</flux:text>
+                    @if (array_key_exists($dim->id, $this->listOpen))
+                        @if ($this->listOpen[$dim->id])
+                            <flux:text class="!font-bold">{{ $dim->sequencia }}. {{  $dim->descricao  }}</flux:text>
+                        @else    
+                            <flux:text>{{ $dim->sequencia }}. {{  $dim->descricao  }}</flux:text>
+                        @endif
+                    @else
+                        <flux:text>{{ $dim->sequencia }}. {{  $dim->descricao  }}</flux:text>
+                    @endif
                 </div>
                 <flux:dropdown>   
                     <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
@@ -97,8 +115,11 @@ new class extends Component
 
                 </flux:dropdown>
             </div>
-          
-            <livewire:indicador.list :dimensao_id="$dim->id"/>
+            @if (array_key_exists($dim->id, $this->listOpen))
+                @if ($this->listOpen[$dim->id])
+                    <livewire:indicador.list :dimensao_id="$dim->id"/>
+                @endif
+            @endif
         </flux:card>
     @endforeach
 

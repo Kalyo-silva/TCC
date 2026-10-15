@@ -85,7 +85,7 @@ new class extends Component
                 <flux:select wire:model='curso_id'>
                         <flux:select.option value="dummy">Selecione...</flux:select.option>
                     @foreach ($this->cursos() as $cur)
-                        <flux:select.option value="{{ $cur->id }}">{{ $cur->nome }}</flux:select.option>
+                        <flux:select.option value="{{ $cur->id }}">{{ $cur->instituicao->nome }} - {{ $cur->nome }}</flux:select.option>
                     @endforeach
                 </flux:select>
             </flux:input.group>

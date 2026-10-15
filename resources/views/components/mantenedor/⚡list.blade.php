@@ -35,36 +35,39 @@ new class extends Component
 ?>
 
 <div class="mt-8">
-    <div class="grid grid-cols-2 gap-4 mb-4">
-        @foreach ($this->mantenedores() as $mant)
-        
-        <flux:card class="flex items-center justify-between">
-            <div class="flex items-start flex-col gap-2">
-                <flux:heading size="lg">{{ $mant->nome }}</flux:heading>
-                @if ($mant->instituicoes()->count() == 1)
-                    <flux:text>{{ $mant->instituicoes()->count() }} Instituição Vinculada</flux:text>
-                @else
-                    <flux:text>{{ $mant->instituicoes()->count() }} Instituições Vinculadas</flux:text>
-                @endif
-            </div>
-            <div class="flex gap-2">
-                <flux:modal.trigger name="remove">
-                    <flux:button icon="trash" wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
-                </flux:modal.trigger>
-                
-                <flux:modal.trigger name="edit">
-                    <flux:button icon="pencil-square" wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
-                </flux:modal.trigger>
-
-                <flux:modal.trigger name="details">
-                    <flux:button icon='information-circle' wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
-                </flux:modal.trigger>
-            </div>
-        </flux:card>
+    @if ($this->mantenedores()->count() != 0)
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            @foreach ($this->mantenedores() as $mant)
             
-        @endforeach
-    </div>
-    
+            <flux:card class="flex items-center justify-between gap-4">
+                <div class="flex items-start flex-col gap-2">
+                    <flux:heading size="lg">{{ $mant->nome }}</flux:heading>
+                    @if ($mant->instituicoes()->count() == 1)
+                        <flux:text>{{ $mant->instituicoes()->count() }} Instituição Vinculada</flux:text>
+                    @else
+                        <flux:text>{{ $mant->instituicoes()->count() }} Instituições Vinculadas</flux:text>
+                    @endif
+                </div>
+                <div class="flex gap-2">
+                    <flux:modal.trigger name="remove">
+                        <flux:button icon="trash" wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
+                    </flux:modal.trigger>
+                    
+                    <flux:modal.trigger name="edit">
+                        <flux:button icon="pencil-square" wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
+                    </flux:modal.trigger>
 
-    <flux:pagination :paginator="$this->mantenedores()" />
+                    <flux:modal.trigger name="details">
+                        <flux:button icon='information-circle' wire:click='selectMantenedor({{ $mant->id }})'></flux:button>
+                    </flux:modal.trigger>
+                </div>
+            </flux:card>
+                
+            @endforeach
+        </div>
+    
+        <flux:pagination :paginator="$this->mantenedores()" />
+    @else
+        <flux:text class="w-full text-center mt-8">Nenhum mantenedor cadastrado...</flux:text>
+    @endif
 </div>

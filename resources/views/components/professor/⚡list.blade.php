@@ -23,7 +23,7 @@ new class extends Component
     }
 
     public function professores(){
-        return professor::where('nome', 'ilike', '%'.$this->search.'%')->orderby($this->sortBy, $this->sortDirection)->paginate(10);
+        return professor::where('nome', 'ilike', '%'.$this->search.'%')->orderby($this->sortBy, $this->sortDirection)->paginate(15);
     }
 
     public function sort($column) {

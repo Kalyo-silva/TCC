@@ -10,6 +10,7 @@ new class extends Component
     protected $listeners = ['postInsert' => '$refresh'];
 
     public $dimensao_id;
+    public $listOpen = [];
 
     public function indicadores(){
         return indicador::where('dimensao_id', $this->dimensao_id)->orderBy('sequencia')->get();
@@ -60,6 +61,15 @@ new class extends Component
         }
 
     }
+
+    public function abrir($id){
+        if (!array_key_exists($id, $this->listOpen)){
+            $this->listOpen[$id] = True;
+        }
+        else {
+            $this->listOpen[$id] = !$this->listOpen[$id];
+        }
+    }
 };
 ?>
 
@@ -68,9 +78,17 @@ new class extends Component
         <flux:separator />
 
         <div class="flex items-center justify-between gap-2 py-2">
-            <div class="flex items-center gap-2 ml-6">
+            <div class="flex items-center gap-2 ml-6 w-full h-full cursor-pointer" wire:click="abrir({{ $ind->id }})">
                 <flux:icon.chart-bar class="size-5"/>
-                <flux:text>{{ $ind->sequencia.'. '.$ind->descricao  }}</flux:text>
+                @if (array_key_exists($ind->id, $this->listOpen))
+                    @if ($this->listOpen[$ind->id])
+                        <flux:text class="!font-bold">{{ $ind->sequencia.'. '.$ind->descricao  }}</flux:text>
+                    @else    
+                        <flux:text>{{ $ind->sequencia.'. '.$ind->descricao  }}</flux:text>
+                    @endif
+                @else
+                    <flux:text>{{ $ind->sequencia.'. '.$ind->descricao  }}</flux:text>
+                @endif
             </div>
             <flux:dropdown>   
                 <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal"></flux:button>
@@ -100,6 +118,10 @@ new class extends Component
             </flux:dropdown>
         </div>
 
-        <livewire:criterio.list :indicador_id="$ind->id"/>
+        @if (array_key_exists($ind->id, $this->listOpen))
+            @if ($this->listOpen[$ind->id])
+                <livewire:criterio.list :indicador_id="$ind->id"/>
+            @endif
+        @endif
     @endforeach
 </div>

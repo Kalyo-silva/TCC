@@ -16,6 +16,6 @@ class indicador extends Model
         return $this->belongsTo(dimensao::class);
     }
     public function criterios() : hasMany{
-        return $this->hasMany(criterio::class);
+        return $this->hasMany(criterio::class)->orderby('sequencia');
     }
 }

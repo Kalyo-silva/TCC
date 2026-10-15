@@ -20,7 +20,7 @@ new class extends Component
     }
 
     public function instituicoes(){
-        return instituicao::with('mantenedor')->where('nome', 'ilike', '%'.$this->search.'%')->orderby('nome', 'asc')->paginate(10);
+        return instituicao::with('mantenedor')->where('nome', 'ilike', '%'.$this->search.'%')->orderby('nome', 'asc')->paginate(12);
     }
 
     public function select(int $id){
@@ -30,7 +30,7 @@ new class extends Component
 ?>
 
 <div>
-    <div class="grid grid-cols-3 items-center gap-4 mt-8 mb-8">
+    <div class="grid grid-cols-2 2xl:grid-cols-3 items-center gap-4 mt-8 mb-8">
         @foreach ($this->instituicoes() as $inst)
             <flux:modal.trigger name="details">
                 <flux:card class="cursor-pointer" wire:click='select({{ $inst->id }})'>

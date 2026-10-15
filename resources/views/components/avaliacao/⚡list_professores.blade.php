@@ -19,7 +19,7 @@ new class extends Component
 };
 ?>
 
-<flux:modal name="view_professores" class="max-w-4xl flex flex-col gap-4">
+<flux:modal name="view_professores" class="max-w-4xl min-w-2xl flex flex-col gap-4">
     @if ($this->coordenador)
         <div class="flex items-center gap-4">
             <flux:icon.user-plus/>
