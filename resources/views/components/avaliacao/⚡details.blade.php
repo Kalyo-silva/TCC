@@ -158,14 +158,14 @@ new class extends Component
     }
 }
 ?>
-<flux:modal name="details" class="min-w-3/4 2xl:min-w-1/2">
+<flux:modal name="details" class="min-w-10/12 2xl:min-w-1/2">
     <div class="flex items-center gap-4">
         <flux:icon.plus/>
         <flux:heading size="">Detalhes da Avaliação</flux:heading>
     </div>
 
     <div class="flex gap-4 w-full">
-        <div class="flex flex-col gap-4 mt-4 w-4/6">
+        <div class="flex flex-col gap-4 mt-4 w-7/12">
             <div class="flex gap-4">
                 <div class="w-8/10">
                     <flux:input label="Descrição" wire:model='descricao' readonly/>
@@ -212,7 +212,7 @@ new class extends Component
                 <flux:input wire:model='usuarioNome' readonly/>
             </flux:input.group>
         </div>
-        <div class="flex flex-col mt-3 gap-2  w-2/6 overflow-hidden">
+        <div class="flex flex-col mt-3 gap-2  w-5/12 overflow-hidden">
             <flux:heading class="">Resultados</flux:heading>
             <flux:card class="h-full flex flex-col justify-between p-0">
                 <div class="h-10/12 flex flex-col px-4 py-4 gap-2 max-h-80 overflow-y-scroll">    

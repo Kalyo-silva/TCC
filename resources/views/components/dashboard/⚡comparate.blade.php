@@ -76,11 +76,14 @@ new class extends Component
 };
 ?>
 
-<div class="flex flex-col gap-4 h-full">
+<div class="flex flex-col gap-4 h-full 2xl:px-8 2xl:py-4">
     @if ($this->mantenedores && $this->mantenedores->count() != 0)
         <div class="flex gap-4 items-center">
-            <div class="flex flex-col gap-2 w-full">
-                <flux:heading>Mantenedor</flux:heading>
+            <flux:card class="flex flex-col gap-2 w-1/2">
+                <div class="flex items-center gap-2">
+                    <flux:icon.building-library />
+                    <flux:heading>Mantenedor</flux:heading>
+                </div>
                 <div class="overflow-hidden overflow-x-scroll pb-2">    
                     <flux:button.group>
                         @foreach ($this->mantenedores as $mantenedor)
@@ -92,12 +95,16 @@ new class extends Component
                         @endforeach
                     </flux:button.group>
                 </div>
-            </div>
-            @if ($this->instituicoes)
-                <div class="flex flex-col gap-2 w-full">
+            </flux:card>
+            <flux:card class="flex flex-col gap-2 w-1/2 h-full">
+                <div class="flex items-center gap-2">
+                    <flux:icon.academic-cap />
                     <flux:heading>Instituições</flux:heading>
+                </div>
+
+                @if ($this->instituicoes)
                     @if ($this->instituicoes->count() != 0)
-                        <div class="overflow-hidden overflow-x-scroll pb-2">    
+                        <div class="h-full overflow-hidden overflow-x-scroll pb-2">    
                                 <flux:button.group>
                                 @foreach ($this->instituicoes as $instituicao)
                                     @if ($this->instituicao_id == $instituicao->id)
@@ -111,8 +118,10 @@ new class extends Component
                     @else
                         <a href="{{route('instituicao')}}"><flux:button icon="plus">Cadastrar uma instituição</flux:button></a>
                     @endif
-                </div>
-            @endif
+                @else
+                    <flux:text class="w-full h-full content-center text-center">Selecione um mantenedor primeiro...</flux:text>
+                @endif
+            </flux:card>
         </div>
     @else
         <div class="w-full h-full flex items-center justify-center">
@@ -148,10 +157,13 @@ new class extends Component
         </div>
     @endif
 
-    @if ($this->cursos)
-        <div class="flex flex-col gap-2 w-full">
+    <flux:card class="flex flex-col gap-2 w-full">
+        <div class="flex items-center gap-2">
+            <flux:icon.book-open />
             <flux:heading>Cursos</flux:heading>
-            <div class="overflow-hidden overflow-x-scroll pb-2">    
+        </div>
+        <div class="overflow-hidden overflow-x-scroll pb-2">    
+            @if ($this->cursos)
                 @if ($this->cursos->count() != 0)
                     <flux:button.group>
                         @foreach ($this->cursos as $curso)
@@ -165,26 +177,30 @@ new class extends Component
                 @else
                     <a href="{{route('curso')}}"><flux:button icon="plus">Cadastrar um curso</flux:button></a>
                 @endif
-            </div>
+            @else
+                <flux:text class="w-full h-full content-center text-center">Selecione uma instituição primeiro...</flux:text>
+            @endif
         </div>
-    @endif
-    
-    @if ($this->avaliacoes)
-        <div class="flex flex-col gap-2 w-full">
-            <flux:heading>Comparar</flux:heading>
-            <div class="flex gap-4 w-full">
-            @if ($this->avaliacoes->count() != 0)
-                    <flux:card class="w-1/2">
-                        <div class="overflow-hidden overflow-x-scroll pb-2">    
-                            <flux:button.group>
-                                @foreach ($this->avaliacoes as $avaliacao)
-                                    @if ($this->avaliacao_a_id == $avaliacao->id)
-                                        <flux:button variant="primary" color="blue" wire:click="selectAvaliacao({{$avaliacao->id}}, 'A')">{{$avaliacao->descricao}}</flux:button>
-                                    @else
-                                        <flux:button variant="outline" wire:click="selectAvaliacao({{$avaliacao->id}}, 'A')">{{$avaliacao->descricao}}</flux:button>
-                                    @endif
-                                @endforeach
-                            </flux:button.group>
+    </flux:card>
+
+    <flux:card class="flex flex-col gap-2 w-full">
+        <flux:heading>Comparar</flux:heading>
+        <div class="flex gap-4 w-full">
+            <flux:card class="w-1/2">
+                @if ($this->avaliacoes)
+                    @if ($this->avaliacoes->count() > 0)
+                        <div class="overflow-hidden">
+                            <div class="overflow-x-scroll pb-2">    
+                                <flux:button.group>
+                                    @foreach ($this->avaliacoes as $avaliacao)
+                                        @if ($this->avaliacao_a_id == $avaliacao->id)
+                                            <flux:button variant="primary" color="blue" wire:click="selectAvaliacao({{$avaliacao->id}}, 'A')">{{$avaliacao->descricao}}</flux:button>
+                                        @else
+                                            <flux:button variant="outline" wire:click="selectAvaliacao({{$avaliacao->id}}, 'A')">{{$avaliacao->descricao}}</flux:button>
+                                        @endif
+                                    @endforeach
+                                </flux:button.group>
+                            </div>
 
                             @if ($this->avaliacao_a)
                                 <div class="flex px-4 py-2 gap-2 mt-4 items-center">
@@ -200,20 +216,30 @@ new class extends Component
                                 <livewire:dashboard.results :id="$this->avaliacao_a_id" :key="'avaliacao-a-'.$this->avaliacao_a_id"/>
                             @endif
                         </div>
-                    </flux:card>
-                    <flux:card class="w-1/2">
-                        <div class="overflow-hidden overflow-x-scroll pb-2">    
-                            <flux:button.group>
-                                @foreach ($this->avaliacoes as $avaliacao)
-                                    @if ($avaliacao->id != $this->avaliacao_a_id)
-                                        @if ($this->avaliacao_b_id == $avaliacao->id)
-                                            <flux:button variant="primary" color="blue" wire:click="selectAvaliacao({{$avaliacao->id}}, 'B')">{{$avaliacao->descricao}}</flux:button>
-                                        @else
-                                            <flux:button variant="outline" wire:click="selectAvaliacao({{$avaliacao->id}}, 'B')">{{$avaliacao->descricao}}</flux:button>
+                    @else
+                        <a href="{{route('avaliacao')}}"><flux:button icon="plus">Cadastrar uma nova Avaliação</flux:button></a>
+                    @endif
+                @else
+                    <flux:text class="w-full h-full content-center text-center">Selecione um curso primeiro...</flux:text>
+                @endif
+            </flux:card>
+            <flux:card class="w-1/2">
+                @if ($this->avaliacoes)
+                    @if ($this->avaliacoes->count() -1 > 0)
+                        <div class="overflow-hidden">
+                            <div class="overflow-x-scroll pb-2">   
+                                <flux:button.group>
+                                    @foreach ($this->avaliacoes as $avaliacao)
+                                        @if ($avaliacao->id != $this->avaliacao_a_id)
+                                            @if ($this->avaliacao_b_id == $avaliacao->id)
+                                                <flux:button variant="primary" color="blue" wire:click="selectAvaliacao({{$avaliacao->id}}, 'B')">{{$avaliacao->descricao}}</flux:button>
+                                            @else
+                                                <flux:button variant="outline" wire:click="selectAvaliacao({{$avaliacao->id}}, 'B')">{{$avaliacao->descricao}}</flux:button>
+                                            @endif
                                         @endif
-                                    @endif
-                                @endforeach
-                            </flux:button.group>
+                                    @endforeach
+                                </flux:button.group>
+                            </div>
 
                             @if ($this->avaliacao_b)
                                 <div class="flex px-4 py-2 gap-2 mt-4 items-center">
@@ -229,11 +255,12 @@ new class extends Component
                                 <livewire:dashboard.results :id="$this->avaliacao_b_id" :key="'avaliacao-b-'.$this->avaliacao_b_id"/>
                             @endif
                         </div>
-                    </flux:card>
-                </div>
-            @else
-                <a href="{{route('avaliacao')}}"><flux:button icon="plus">Cadastrar uma nova Avaliação</flux:button></a>
-            @endif
-        </div>
-    @endif
+                    @else
+                        <a href="{{route('avaliacao')}}"><flux:button icon="plus">Cadastrar uma nova Avaliação</flux:button></a>
+                    @endif
+                @else
+                    <flux:text class="w-full h-full content-center text-center">Selecione um curso primeiro...</flux:text>
+                @endif
+            </flux:card>
+    </flux:card>
 </div>

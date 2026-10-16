@@ -3,6 +3,9 @@
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\avaliacao;
+use App\Models\avaliacao_evidencia;
+use App\Models\avaliacao_indicador;
+use App\Models\avaliacao_corpodocente;
 use Flux\Flux;
 
 new class extends Component
@@ -15,14 +18,44 @@ new class extends Component
     }
 
     public function destroy(){
-        $curso = avaliacao::findOrFail($this->id);
+        $avaliacao = avaliacao::findOrFail($this->id);
 
-        if ($curso){
+        if ($avaliacao){
+            // remove indicador-evidencia
             try{
-                if ($curso->delete()){
+                $indicador_evidencia = avaliacao_evidencia::where('avaliacao_id', $this->id);
+
+                $indicador_evidencia->delete();
+            }
+            catch (Throwable $e){
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+            }
+            // remove avaliacao-indicador
+            try{
+                $indicador_indicador = avaliacao_indicador::where('avaliacao_id', $this->id);
+
+                $indicador_indicador->delete();
+            }
+            catch (Throwable $e){
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+            }
+            // remove avaliacao_corpodocente
+            try{
+                $avaliacao_corpodocente = avaliacao_corpodocente::where('avaliacao_id', $this->id);
+
+                $avaliacao_corpodocente->delete();
+            }
+            catch (Throwable $e){
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+            }
+
+            // remove avaliacao
+            try{
+                if ($avaliacao->delete()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro removido com sucesso!');
                     Flux::modal('remove')->close();
+                    Flux::modal('details')->close();
                 }
             }
             catch (Throwable $e){

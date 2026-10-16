@@ -4,6 +4,7 @@ use Livewire\Component;
 use Flux\Flux;
 use App\Models\professor;
 use App\Models\instituicao;
+use App\Models\mantenedor;
 use App\Models\curso;
 
 new class extends Component
@@ -11,6 +12,8 @@ new class extends Component
     public $nome;
     public $instituicao_id;
     public $coordenador_id;
+
+    public $mant_id = 0;
 
     public function save(){
         $curso = new curso();
@@ -40,8 +43,16 @@ new class extends Component
         }
     }
 
+    public function getMantenedor(){
+        return mantenedor::get();
+    }
+
     public function instituicoes(){
-        return instituicao::orderBy('nome', 'asc')->get();
+        if ($this->mant_id != 0){
+            return instituicao::where('mantenedor_id', $this->mant_id)->orderBy('nome', 'asc')->get();
+        }
+    
+        return instituicao::get();
     }
     public function professores(){
         return professor::orderBy('nome', 'asc')->get();
@@ -56,30 +67,41 @@ new class extends Component
     </div>
         <form wire:submit='save' class="flex flex-col gap-4 mt-4">
             <flux:input label="Nome" placeholder="Nome..." wire:model='nome'/>
+
             <div class="flex gap-4">
+                <div class="w-1/2">
+                    <flux:input.group label="Mantenedor">
+                        <flux:button icon='building-library'/>
+                        <flux:select wire:model='mant_id' wire:change="instituicoes()">
+                            <flux:select.option value="0">Selecione...</flux:select.option>
+                            @foreach ($this->getMantenedor() as $mant)
+                                <flux:select.option value="{{ $mant->id }}">{{ $mant->nome }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    </flux:input.group>
+                </div>
                 <div class="w-1/2">
                     <flux:input.group label="Instituição">
                         <flux:button icon='academic-cap'/>
                         <flux:select wire:model='instituicao_id'>
-                            <flux:select.option value="dummy">Instituição...</flux:select.option>
+                            <flux:select.option value="dummy">Selecione...</flux:select.option>
                             @foreach ($this->instituicoes() as $inst)
                                 <flux:select.option value="{{ $inst->id }}">{{ $inst->nome }}</flux:select.option>
                             @endforeach
                         </flux:select>
                     </flux:input.group>
                 </div>
-                <div class="w-1/2">
-                    <flux:input.group label="Coordenador">
-                        <flux:button icon='user'/>
-                        <flux:select wire:model='coordenador_id'>
-                            <flux:select.option value="dummy">Coordenador...</flux:select.option>
-                            @foreach ($this->professores() as $prof)
-                                <flux:select.option value="{{ $prof->id }}">{{ $prof->nome }}</flux:select.option>
-                            @endforeach
-                        </flux:select>
-                    </flux:input.group>
-                </div>
             </div>
+
+            <flux:input.group label="Coordenador">
+                <flux:button icon='user'/>
+                <flux:select wire:model='coordenador_id'>
+                    <flux:select.option value="dummy">Coordenador...</flux:select.option>
+                    @foreach ($this->professores() as $prof)
+                        <flux:select.option value="{{ $prof->id }}">{{ $prof->nome }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            </flux:input.group>
             
             <flux:button type="submit" class="mt-4" variant="primary">Salvar</flux:button>
         </form>

@@ -4,6 +4,8 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use Flux\Flux;
 use App\Models\instrumento;
+use App\Models\mantenedor;
+use App\Models\instituicao; 
 use App\Models\curso;
 use App\Models\avaliacao;
 
@@ -17,6 +19,9 @@ new class extends Component
     public $data_inicio;
     public $data_fim;
     public $situacao;
+
+    public $mant_id = 0;
+    public $inst_id = 0;
 
     #[On('AvaliacaoDetail')]
     public function getIdInstrumento($id){
@@ -80,7 +85,23 @@ new class extends Component
         return instrumento::get();
     }
 
+    public function getMantenedor(){
+        return mantenedor::get();
+    }
+
+    public function getInstituicoes(){
+        if ($this->mant_id != 0){
+            return instituicao::where('mantenedor_id', $this->mant_id)->get();
+        }
+        
+        return instituicao::get();
+    }
+
     public function cursos(){
+        if ($this->inst_id != 0){
+            return curso::where('instituicao_id', $this->inst_id)->get();
+        }
+        
         return curso::get();
     }
 };
@@ -98,6 +119,26 @@ new class extends Component
                 <div class="w-2/10">
                     <flux:input label="Ano..." wire:model='ano'/>
                 </div>
+            </div>
+            <div class="w-full flex gap-4">
+                <flux:input.group label="Mantenedor">
+                    <flux:button icon='building-library'/>
+                    <flux:select wire:model='mant_id' wire:change="getInstituicoes()">
+                            <flux:select.option value="0">Selecione...</flux:select.option>
+                        @foreach ($this->getMantenedor() as $mant)
+                            <flux:select.option value="{{ $mant->id }}">{{ $mant->nome }} - {{ $mant->nome }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                </flux:input.group>
+                <flux:input.group label="Instituição">
+                    <flux:button icon='academic-cap'/>
+                    <flux:select wire:model='inst_id' wire:change="cursos()">
+                            <flux:select.option value="0">Selecione...</flux:select.option>
+                        @foreach ($this->getInstituicoes() as $inst)
+                            <flux:select.option value="{{ $inst->id }}">{{ $inst->nome }} - {{ $inst->nome }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                </flux:input.group>
             </div>
             <flux:input.group label="Curso">
                 <flux:button icon='book-open'/>
