@@ -126,7 +126,7 @@ new class extends Component
                     <flux:select wire:model='mant_id' wire:change="getInstituicoes()">
                             <flux:select.option value="0">Selecione...</flux:select.option>
                         @foreach ($this->getMantenedor() as $mant)
-                            <flux:select.option value="{{ $mant->id }}">{{ $mant->nome }} - {{ $mant->nome }}</flux:select.option>
+                            <flux:select.option value="{{ $mant->id }}">{{ $mant->nome }}</flux:select.option>
                         @endforeach
                     </flux:select>
                 </flux:input.group>
@@ -135,7 +135,7 @@ new class extends Component
                     <flux:select wire:model='inst_id' wire:change="cursos()">
                             <flux:select.option value="0">Selecione...</flux:select.option>
                         @foreach ($this->getInstituicoes() as $inst)
-                            <flux:select.option value="{{ $inst->id }}">{{ $inst->nome }} - {{ $inst->nome }}</flux:select.option>
+                            <flux:select.option value="{{ $inst->id }}">{{ $inst->nome }}</flux:select.option>
                         @endforeach
                     </flux:select>
                 </flux:input.group>
