@@ -8,18 +8,21 @@ use Flux\Flux;
 new class extends Component
 {
     public $id;
+    public $instituicao;
 
     #[On('Detail')]
     public function getIdinstituicao($id){
         $this->id = $id;
+
+        $this->instituicao = instituicao::findOrFail($this->id);
     }
 
     public function destroy(){
-        $instituicao = instituicao::findOrFail($this->id);
+        $this->instituicao = instituicao::findOrFail($this->id);
 
-        if ($instituicao){
+        if ($this->instituicao){
             try{
-                if ($instituicao->delete()){
+                if ($this->instituicao->delete()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro removido com sucesso!');
                     Flux::modal('remove')->close();
@@ -27,7 +30,7 @@ new class extends Component
                 }
             }
             catch (Throwable $e){
-                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
         }
     }
@@ -35,14 +38,29 @@ new class extends Component
 ?>
 
 <flux:modal name="remove">
-    <div class="flex items-center gap-2">
-        <flux:heading size="lg">Remover Instituição</flux:heading>
-    </div>
-    <flux:text class="mt-2">Tem certeza que deseja remover esta instituição?</flux:text>
-    <div class="flex justify-end items-center gap-2 mt-4">
-        <flux:modal.close>
-            <flux:button icon='arrow-uturn-left' type="button">Cancelar</flux:button>
-        </flux:modal.close>
-        <flux:button icon="trash" type="submit" variant="danger" wire:click='destroy'>Remover</flux:button>
-    </div>
+    @if ($this->instituicao)
+        @if ($this->instituicao->cursos->count() == 0)
+            <div class="flex items-center gap-2">
+                <flux:heading size="lg">Remover Instituição</flux:heading>
+            </div>
+            <flux:text class="mt-2">Tem certeza que deseja remover esta instituição?</flux:text>
+            <div class="flex justify-end items-center gap-2 mt-4">
+                <flux:modal.close>
+                    <flux:button icon='arrow-uturn-left' type="button">Cancelar</flux:button>
+                </flux:modal.close>
+                <flux:button icon="trash" type="submit" variant="danger" wire:click='destroy'>Remover</flux:button>
+            </div>
+        @else
+            <div class="flex items-center gap-2">
+                <flux:icon.exclamation-triangle color="red"/>
+                <flux:heading size="lg">Não é possível remover esta instituição</flux:heading>
+            </div>
+            <flux:text class="mt-2">Esta instituição possui cursos vinculados. para remove-la, primeiro remova os cursos que estão relacionados a este registro.</flux:text>
+            <div class="flex justify-end items-center gap-2 mt-4">
+                <flux:modal.close>
+                    <flux:button icon='arrow-uturn-left' type="button">Retornar</flux:button>
+                </flux:modal.close>
+            </div>
+        @endif
+    @endif
 </flux:modal>

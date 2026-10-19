@@ -28,7 +28,7 @@ new class extends Component
                 $indicador_evidencia->delete();
             }
             catch (Throwable $e){
-                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
             // remove avaliacao-indicador
             try{
@@ -37,7 +37,7 @@ new class extends Component
                 $indicador_indicador->delete();
             }
             catch (Throwable $e){
-                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
             // remove avaliacao_corpodocente
             try{
@@ -46,7 +46,7 @@ new class extends Component
                 $avaliacao_corpodocente->delete();
             }
             catch (Throwable $e){
-                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
 
             // remove avaliacao
@@ -59,7 +59,7 @@ new class extends Component
                 }
             }
             catch (Throwable $e){
-                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
         }
     }

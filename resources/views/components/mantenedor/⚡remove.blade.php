@@ -8,28 +8,26 @@ use Flux\Flux;
 new class extends Component
 {
     public $id;
+    public $mantenedor;
 
     #[On('MantenedorDetail')]
     public function getIdMantenedor($id){
         $this->id = $id;
+
+        $this->mantenedor = mantenedor::findOrFail($this->id);
     }
 
     public function destroy(){
-        $mantenedor = mantenedor::findOrFail($this->id);
-
-        if ($mantenedor){
+        if ($this->mantenedor){
             try{
-                if ($mantenedor->delete()){
+                if ($this->mantenedor->delete()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro removido com sucesso!');
                     Flux::modal('remove')->close();
                 }
             }
             catch (Throwable $e){
-                if ($e->getCode() == 23503)
-                    Flux::toast(variant : "danger", heading: 'Não é possível remover este registro...', text : "Existem instituições vinculadas a este mantenedor. Caso deseje remove-lo, por favor desvincule as instituições primeiro.");
-                else
-                    Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao remover o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
         }
     }
@@ -37,14 +35,29 @@ new class extends Component
 ?>
 
 <flux:modal name="remove">
-    <div class="flex items-center gap-2">
-        <flux:heading size="lg">Remover Mantenedor</flux:heading>
-    </div>
-    <flux:text class="mt-2">Tem certeza que deseja remover este mantenedor?</flux:text>
-    <div class="flex justify-end items-center gap-2 mt-4">
-        <flux:modal.close>
-            <flux:button icon='arrow-uturn-left' type="button">Cancelar</flux:button>
-        </flux:modal.close>
-        <flux:button icon="trash" type="submit" variant="danger" wire:click='destroy'>Remover</flux:button>
-    </div>
+    @if ($this->mantenedor)
+        @if ($this->mantenedor->instituicoes->count() == 0)
+            <div class="flex items-center gap-2">
+                <flux:heading size="lg">Remover Mantenedor</flux:heading>
+            </div>
+            <flux:text class="mt-2">Tem certeza que deseja remover este mantenedor?</flux:text>
+            <div class="flex justify-end items-center gap-2 mt-4">
+                <flux:modal.close>
+                    <flux:button icon='arrow-uturn-left' type="button">Cancelar</flux:button>
+                </flux:modal.close>
+                <flux:button icon="trash" type="submit" variant="danger" wire:click='destroy'>Remover</flux:button>
+            </div>
+        @else
+            <div class="flex items-center gap-2">
+                <flux:icon.exclamation-triangle color="red"/>
+                <flux:heading size="lg">Não é possível remover este mantenedor</flux:heading>
+            </div>
+            <flux:text class="mt-2">Este mantenedor possui instituições vinculadas. para remove-lo, primeiro remova as instituições que estão relacionadas a este registro.</flux:text>
+            <div class="flex justify-end items-center gap-2 mt-4">
+                <flux:modal.close>
+                    <flux:button icon='arrow-uturn-left' type="button">Retornar</flux:button>
+                </flux:modal.close>
+            </div>
+        @endif
+    @endif
 </flux:modal>

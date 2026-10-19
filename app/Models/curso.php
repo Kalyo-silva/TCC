@@ -23,6 +23,10 @@ class curso extends Model
         return $this->hasMany(curso_professores::class, 'curso_id', 'id');
     }
 
+    public function avaliacoes(): hasMany{
+        return $this->hasMany(avaliacao::class, 'curso_id', 'id');
+    }
+
     public function instituicao() : BelongsTo{
         return $this->BelongsTo(instituicao::class);
     }
