@@ -57,10 +57,14 @@ new class extends Component
             }
             catch (Throwable $e){
                 if ($e->getCode() == 23505){ 
-                    Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text: "Esta instituição já está cadastrada no sistema.");
+                    Flux::toast(variant : "danger", 
+                                heading: 'Falha ao criar o registro...', 
+                                text: "Esta instituição já está cadastrada no sistema.");
                 }
                 else{   
-                    Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+                    Flux::toast(variant : "danger", 
+                                heading: 'Falha ao criar o registro...', 
+                                text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
                 }
             }
         }

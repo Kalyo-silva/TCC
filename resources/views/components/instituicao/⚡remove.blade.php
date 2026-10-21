@@ -22,6 +22,10 @@ new class extends Component
 
         if ($this->instituicao){
             try{
+                if ($this->instituicao->logo) {
+                    Storage::disk('public')->delete('img_instituicoes/'.$this->instituicao->logo);
+                }
+                
                 if ($this->instituicao->delete()){
                     $this->dispatch('postInsert');
                     Flux::toast(variant : "success", text: 'Registro removido com sucesso!');

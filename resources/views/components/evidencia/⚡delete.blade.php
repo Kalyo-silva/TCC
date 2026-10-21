@@ -19,6 +19,9 @@ new class extends Component
     public function destroy(){
         if ($this->evidencia){
             try{
+                if ($this->evidencia->file_path){
+                    Storage::disk('public')->delete('evidencias/'.$this->evidencia->file_path);
+                }
                 if ($this->evidencia->delete()){
                     $this->dispatch('load_evidencias');
                     Flux::toast(variant : "success", text: 'Registro removido com sucesso!');

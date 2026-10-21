@@ -42,7 +42,7 @@ new class extends Component
                 else{   
                     Flux::toast(variant : "danger", 
                                 heading: 'Falha ao criar o registro...', 
-                                text : $e->getMessage());
+                                text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
                 }
             }
         }
