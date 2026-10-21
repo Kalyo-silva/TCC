@@ -106,7 +106,7 @@ new class extends Component
                 return true;
             }
             catch (Throwable $e){  
-                Flux::toast(variant : "danger", heading: 'Falha ao cadastrar evidência...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao cadastrar evidência...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
                 return false;
             }
         }

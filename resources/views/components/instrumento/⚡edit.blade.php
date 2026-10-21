@@ -47,7 +47,7 @@ new class extends Component
                     Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text: "Já existe um instrumento com este titulo cadastrado no sistema.");
                 }
                 else{   
-                    Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text : $e->getMessage());
+                    Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
                 }
             }
         }

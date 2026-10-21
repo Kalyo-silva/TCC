@@ -50,7 +50,7 @@ new class extends Component
                 }
             }
             catch (Throwable $e){  
-                Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
         }
     }

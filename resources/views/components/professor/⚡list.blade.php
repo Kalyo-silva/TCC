@@ -78,7 +78,7 @@ new class extends Component
                             <flux:menu.item icon="link"><a href="{{ $prof->lattes }}" target="_blank">Curriculum Lattes</a></flux:menu.item>
                             <flux:menu.separator />
                             <flux:modal.trigger name="remove">
-                                <flux:menu.item variant="danger" icon="trash" wire:click='select({{ $prof->id }})'>Delete</flux:menu.item>
+                                <flux:menu.item variant="danger" icon="trash" wire:click='select({{ $prof->id }})'>Remover</flux:menu.item>
                             </flux:modal.trigger>
                         </flux:menu>
 

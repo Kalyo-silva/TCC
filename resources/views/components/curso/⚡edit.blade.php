@@ -52,12 +52,12 @@ new class extends Component
             try{
                 if ($curso->save()){
                     $this->dispatch('postInsert');
-                    Flux::toast(variant : "success", text: 'Registro criado com sucesso!');
+                    Flux::toast(variant : "success", text: 'Registro alterado com sucesso!');
                     Flux::modal('edit')->close();
                 }
             }
             catch (Throwable $e){  
-                Flux::toast(variant : "danger", heading: 'Falha ao criar o registro...', text : $e->getMessage());
+                Flux::toast(variant : "danger", heading: 'Falha ao alterar o registro...', text : "Por favor contate o administrador do sistema para mais informações. Código: ". $e->getCode());
             }
         }
     }
