@@ -119,7 +119,7 @@ new class extends Component
                         <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" class="cursor-pointer"></flux:button>
                         
                         <flux:menu>
-                                <flux:menu.item icon="magnifying-glass" wire:click=''>Visualizar</flux:menu.item>
+                                <a href="{{ route('professor') }}"><flux:menu.item icon="magnifying-glass" wire:click=''>Visualizar</flux:menu.item></a>
                         </flux:menu>
                     </flux:dropdown>
                 </flux:card>
@@ -141,7 +141,7 @@ new class extends Component
                         <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" class="cursor-pointer"></flux:button>
                         
                         <flux:menu>
-                            <flux:menu.item icon="magnifying-glass" wire:click=''>Visualizar</flux:menu.item>
+                            <a href="{{ route('professor') }}"><flux:menu.item icon="magnifying-glass" wire:click=''>Visualizar</flux:menu.item></a>
                             <flux:menu.item icon="user-minus" wire:click='remProf({{ $curso->id }})'>Desvincular</flux:menu.item>
                         </flux:menu>
                     </flux:dropdown>
