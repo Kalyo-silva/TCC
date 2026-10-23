@@ -25,13 +25,13 @@ new class extends Component
         $qtd_indicadores = [];
         
         foreach ($this->avaliacao_indicador as $avaind) {
-            if (!array_key_exists($avaind->indicador->dimensao->descricao, $somas)){
-                $somas[$avaind->indicador->dimensao->descricao] = 0;
-                $qtd_indicadores[$avaind->indicador->dimensao->descricao] = 0;
+            if (!array_key_exists($avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao, $somas)){
+                $somas[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] = 0;
+                $qtd_indicadores[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] = 0;
             }
 
-            $somas[$avaind->indicador->dimensao->descricao] += $avaind->nota;
-            $qtd_indicadores[$avaind->indicador->dimensao->descricao] += 1;
+            $somas[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] += $avaind->nota;
+            $qtd_indicadores[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] += 1;
         }
 
         foreach ($somas as $dim => $soma) {
@@ -39,13 +39,15 @@ new class extends Component
             $this->SomaGeral += $soma / $qtd_indicadores[$dim];
             $this->totalDimensoes += 1;
         }
+
+        ksort($this->medias);
     }
 
     public function getIndicadoresByDimensao($dim){
         $result = [];
 
         foreach ($this->avaliacao_indicador as $avaind) {
-            if ($avaind->indicador->dimensao->descricao == $dim){
+            if ($avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao == $dim){
                 array_push($result, $avaind);
             }
         }
@@ -73,9 +75,9 @@ new class extends Component
             @foreach ($this->medias as $dim => $med)
                 <flux:button.group>
                     @if ($this->selectedDim == $dim)
-                        <flux:button class="w-10/12" variant="primary" color="blue" icon="cube" wire:click="selectDim('{{ $dim }}')">{{ $dim }}</flux:button>
+                        <flux:button class="w-10/12 justify-start" variant="primary" color="blue" icon="cube" wire:click="selectDim('{{ $dim }}')">{{ $dim }}</flux:button>
                     @else
-                        <flux:button class="w-10/12" icon="cube" wire:click="selectDim('{{ $dim }}')">{{ $dim }}</flux:button>
+                        <flux:button class="w-10/12 justify-start" icon="cube" wire:click="selectDim('{{ $dim }}')">{{ $dim }}</flux:button>
                     @endif
                     <div class="w-2/12">
                         <flux:input class="w-full font-bold" style="text-align: center;" value="{{ round($med,2) }}" disabled></flux:input>
@@ -84,7 +86,7 @@ new class extends Component
                 @if ($this->selectedDim == $dim)
                     @foreach ($this->getIndicadoresByDimensao($dim) as $ind)
                         <flux:button.group class="w-4/5">
-                            <flux:button class="w-10/12 overflow-hidden" icon="chart-bar">{{ $ind->indicador->descricao }}</flux:button>
+                            <flux:button class="w-10/12 overflow-hidden justify-start" icon="chart-bar">{{ $ind->indicador->sequencia.". ".$ind->indicador->descricao }}</flux:button>
                             <div class="w-2/12">
                                 <flux:input class="w-full" style="text-align: center;" value="{{ round($ind->nota,2) }}" disabled></flux:input>
                             </div>

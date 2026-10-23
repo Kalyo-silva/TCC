@@ -71,13 +71,13 @@ new class extends Component
         $qtd_indicadores = [];
         
         foreach ($this->avaliacao_indicador as $avaind) {
-            if (!array_key_exists($avaind->indicador->dimensao->descricao, $somas)){
-                $somas[$avaind->indicador->dimensao->descricao] = 0;
-                $qtd_indicadores[$avaind->indicador->dimensao->descricao] = 0;
+            if (!array_key_exists($avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao, $somas)){
+                $somas[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] = 0;
+                $qtd_indicadores[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] = 0;
             }
 
-            $somas[$avaind->indicador->dimensao->descricao] += $avaind->nota;
-            $qtd_indicadores[$avaind->indicador->dimensao->descricao] += 1;
+            $somas[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] += $avaind->nota;
+            $qtd_indicadores[$avaind->indicador->dimensao->sequencia.". ".$avaind->indicador->dimensao->descricao] += 1;
         }
 
         foreach ($somas as $dim => $soma) {
@@ -86,6 +86,7 @@ new class extends Component
             $this->totalDimensoes += 1;
         }
 
+        ksort($this->medias);
     }
 
     public function select(int $id){
@@ -218,7 +219,7 @@ new class extends Component
                 <div class="h-10/12 flex flex-col px-4 py-4 gap-2 max-h-80 overflow-y-scroll">    
                     @foreach ($this->medias as $dim => $med)
                         <flux:button.group>
-                            <flux:button class="w-10/12" icon="cube">{{ $dim }}</flux:button>
+                            <flux:button class="w-10/12 justify-start" icon="cube">{{ $dim }}</flux:button>
                             <div class="w-2/12">
                                 <flux:input class="w-full font-bold" style="text-align: center;" value="{{ round($med,2) }}" disabled></flux:input>
                             </div>
