@@ -102,7 +102,7 @@ new class extends Component
             $query->where('titulo', 'ilike', '%'.$this->search.'%')->orWhere('link', 'ilike', '%'.$this->search.'%');
         })->count();
 
-        $this->recentes = evidencia::orderBy('created_at', 'desc')->take(6)->get();
+        $this->recentes = evidencia::orderBy('created_at', 'desc')->take(4)->get();
     }
 
     public function mount(){
@@ -318,7 +318,7 @@ new class extends Component
                     @foreach ($this->lista_audios as $auds)
                         <flux:tooltip content="{{ $auds->file_name }}" class="w-full">
                             <flux:card class="p-0 overflow-hidden border hover:border-2 cursor-pointer w-full flex flex-col items-center" wire:click="setEvidenciaDetails({{$auds->id}})">  
-                                <audio src="{{ asset('storage/evidencias/'.$auds->file_path) }}" controls class="w-64"> </audio>   
+                                <audio src="{{ asset('storage/evidencias/'.$auds->file_path) }}" controls class="w-full"> </audio>   
                                 <flux:text class="px-2 py-1 text-center">{{$auds->titulo}}</flux:text>
                             </flux:card>
                         </flux:tooltip>
