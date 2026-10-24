@@ -54,7 +54,7 @@ new class extends Component
             @if ($this->professor->avaliacoes->count() != 0)
                 <flux:text class="mt-2">Este professor está vinculado ao histórico de corpo docente de uma avaliação realizada e deve ser mantido por motivo de integridade da avaliação.</flux:text>
             @elseif ($this->professor->cursos->count() != 0)
-                <flux:text class="mt-2">Este professor está vinculado em um ou mais cursos. para remove-lo, primeiro remova o professor do corpo docente do curso que esta relacionado a este registro.</flux:text>
+                <flux:text class="mt-2">Este professor está vinculado em um ou mais cursos. para removê-lo, primeiro remova o professor do corpo docente do curso que esta relacionado a este registro.</flux:text>
             @endif
             <div class="flex justify-end items-center gap-2 mt-4">
                 <flux:modal.close>

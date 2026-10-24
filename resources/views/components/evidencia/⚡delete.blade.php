@@ -54,7 +54,7 @@ new class extends Component
                 <flux:icon.exclamation-triangle color="red"/>
                 <flux:heading size="lg">Não é possível remover esta evidência</flux:heading>
             </div>
-            <flux:text class="mt-2">Esta evidência está vinculada a uma avaliação realizada. Devido a isso, não é possivel remove-la para não comprometer com a integridade da avaliação.</flux:text>
+            <flux:text class="mt-2">Esta evidência está vinculada a uma avaliação realizada. Devido a isso, não é possivel removê-la para não comprometer com a integridade da avaliação.</flux:text>
             <div class="flex justify-end items-center gap-2 mt-4">
                 <flux:modal.close>
                     <flux:button icon='arrow-uturn-left' type="button">Retornar</flux:button>

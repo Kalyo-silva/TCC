@@ -59,7 +59,7 @@ new class extends Component
                 <flux:icon.exclamation-triangle color="red"/>
                 <flux:heading size="lg">Não é possível remover esta instituição</flux:heading>
             </div>
-            <flux:text class="mt-2">Esta instituição possui cursos vinculados. para remove-la, primeiro remova os cursos que estão relacionados a este registro.</flux:text>
+            <flux:text class="mt-2">Esta instituição possui cursos vinculados. para removê-la, primeiro remova os cursos que estão relacionados a este registro.</flux:text>
             <div class="flex justify-end items-center gap-2 mt-4">
                 <flux:modal.close>
                     <flux:button icon='arrow-uturn-left' type="button">Retornar</flux:button>

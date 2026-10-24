@@ -52,7 +52,7 @@ new class extends Component
                 <flux:icon.exclamation-triangle color="red"/>
                 <flux:heading size="lg">Não é possível remover esta dimensão</flux:heading>
             </div>
-            <flux:text class="mt-2">Esta dimensão possui indicadores vinculados. para remove-la, primeiro remova os indicadores desta dimensão.</flux:text>
+            <flux:text class="mt-2">Esta dimensão possui indicadores vinculados. para removê-la, primeiro remova os indicadores desta dimensão.</flux:text>
             <div class="flex justify-end items-center gap-2 mt-4">
                 <flux:modal.close>
                     <flux:button icon='arrow-uturn-left' type="button">Retornar</flux:button>

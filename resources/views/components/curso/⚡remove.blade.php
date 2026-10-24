@@ -49,12 +49,12 @@ new class extends Component
         @else
             <div class="flex items-center gap-2">
                 <flux:icon.exclamation-triangle color="red"/>
-                <flux:heading size="lg">Não é possível remover este professor</flux:heading>
+                <flux:heading size="lg">Não é possível remover este curso</flux:heading>
             </div>
             @if ($this->curso->avaliacoes->count() != 0)
                 <flux:text class="mt-2">Este curso está vinculado a uma avaliação realizada e deve ser mantido por motivo de integridade da avaliação.</flux:text>
             @elseif ($this->curso->professores->count() != 0)
-                <flux:text class="mt-2">Este curso possui professores vinculados. para remove-lo, primeiro remova os professores do corpo docente deste curso.</flux:text>
+                <flux:text class="mt-2">Este curso possui professores vinculados. para removê-lo, primeiro remova os professores do corpo docente deste curso.</flux:text>
             @endif
             <div class="flex justify-end items-center gap-2 mt-4">
                 <flux:modal.close>
